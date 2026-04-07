@@ -1,10 +1,4 @@
-# 🎯 Career Analysis App - Hệ thống Định hướng Nghề nghiệp tích hợp AI
-
-![Cấu trúc dự án](https://img.shields.io/badge/Architecture-Client%20%2F%20Server-blue)
-![Frontend](https://img.shields.io/badge/Frontend-React%20%7C%20Vite%20%7C%20Tailwind-61DAFB?logo=react)
-![Backend](https://img.shields.io/badge/Backend-FastAPI%20%7C%20Python-009688?logo=fastapi)
-![AI/ML](https://img.shields.io/badge/AI%20Model-Random%20Forest-FF6F00?logo=scikit-learn)
-
+# Career Analysis App 
 ## 📖 Giới thiệu Dự án
 **Career Analysis App** là một ứng dụng Web thông minh được xây dựng nhằm mục đích hỗ trợ học sinh THPT và sinh viên tìm ra ngành học/nghề nghiệp phù hợp nhất với bản thân. 
 
