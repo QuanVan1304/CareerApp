@@ -13,3 +13,5 @@
 **/*.csv
 # Bỏ qua dữ liệu gốc quá nặng (Tránh lỗi giới hạn 100MB của GitHub)
 backend/ai_training/data.csv
+
+BE/career_model.pkl

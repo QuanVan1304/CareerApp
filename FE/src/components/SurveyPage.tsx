@@ -1,344 +1,605 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { X, Plus, ChevronRight, ChevronLeft, Loader2 } from "lucide-react";
-import { personalityQuestions } from "../data/careers";
+import { X, Plus, ChevronRight, ChevronLeft, Loader2, Sparkles, Brain, Target } from "lucide-react";
+import { personalityQuestions, careers } from "../data/careers";
 
-type SurveyStep = "personality" | "interests";
+// ─── Types ────────────────────────────────────────────────────────────────────
+type SurveyStep = "questions" | "insight" | "personality-result" | "interests";
 
 interface Interest {
   name: string;
   level: number;
 }
 
+interface PredictPayload {
+  R_Score: number;
+  I_Score: number;
+  A_Score: number;
+  S_Score: number;
+  E_Score: number;
+  C_Score: number;
+  TIPI1: number;
+  TIPI2: number;
+  TIPI3: number;
+  TIPI4: number;
+  TIPI5: number;
+  TIPI6: number;
+  TIPI7: number;
+  TIPI8: number;
+  TIPI9: number;
+  TIPI10: number;
+}
+
+// ─── Insight xuất hiện sau câu nào (0-indexed) ───────────────────────────────
+const INSIGHT_AFTER: number[] = [7];
+
+// ─── RIASEC trait mapping ─────────────────────────────────────────────────────
+const TRAIT_TO_RIASEC: Record<string, string> = {
+  "technical": "R", "practical": "R", "hands-on": "R",
+  "analytical": "I", "problem-solving": "I", "studious": "I",
+  "focused": "I", "independent": "I",
+  "creative": "A", "artistic": "A", "innovative": "A", "flexible": "A",
+  "social": "S", "collaborative": "S", "communicative": "S", "dynamic": "S",
+  "leadership": "E", "energetic": "E",
+  "detail-oriented": "C",
+};
+
+const RIASEC_META: Record<string, { label: string; desc: string; color: string; bg: string }> = {
+  R: { label: "Thực tế (Realistic)",        desc: "Thích làm việc tay chân, kỹ thuật, máy móc",         color: "#16a34a", bg: "#f0fdf4" },
+  I: { label: "Nghiên cứu (Investigative)", desc: "Thích khám phá, phân tích, tư duy logic",             color: "#2563eb", bg: "#eff6ff" },
+  A: { label: "Nghệ thuật (Artistic)",      desc: "Thích sáng tạo, biểu đạt, tự do",                    color: "#9333ea", bg: "#faf5ff" },
+  S: { label: "Xã hội (Social)",            desc: "Thích giúp đỡ người khác, giao tiếp, dạy học",        color: "#ea580c", bg: "#fff7ed" },
+  E: { label: "Doanh nghiệp (Enterprising)",desc: "Thích lãnh đạo, thuyết phục, kinh doanh",           color: "#ca8a04", bg: "#fefce8" },
+  C: { label: "Quy củ (Conventional)",      desc: "Thích trật tự, số liệu, quy trình rõ ràng",           color: "#0891b2", bg: "#ecfeff" },
+};
+
+// ─── Tính RIASEC từ answers ───────────────────────────────────────────────────
+function calcModelPayload(answers: Record<string, number>): PredictPayload {
+  // MA TRẬN ĐIỂM (Dựa trên hàm Quantile của cleaned_riasec.csv)
+  // Cột tương ứng với số lần chọn trúng: [0 lần, 1 lần, 2 lần, 3 lần, 4 lần, 5 lần]
+  const scoringTable: Record<string, number[]> = {
+    R: [8,  11, 16, 21, 27, 32],
+    I: [13, 18, 25, 31, 35, 38],
+    A: [12, 17, 24, 29, 34, 38],
+    S: [18, 23, 28, 33, 36, 40],
+    E: [11, 16, 21, 26, 30, 35],
+    C: [9,  13, 19, 25, 31, 36]
+  };
+
+  // Khởi tạo bộ đếm
+  const counts: Record<string, number> = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+
+  Object.entries(answers).forEach(([qid, optIdx]) => {
+    const q = personalityQuestions.find(q => q.id === qid);
+    if (!q) return;
+
+    const option = q.options[optIdx] as any; 
+
+    // Đếm số lần xuất hiện của nhóm tính cách trong 10 câu đầu
+    if (option?.traits && !qid.startsWith("tipi_")) {
+      option.traits.forEach((trait: string) => {
+        if (counts[trait] !== undefined) {
+          counts[trait] += 1;
+        }
+      });
+    }
+  });
+
+  // Ánh xạ bộ đếm sang điểm thực tế của Model AI
+  const s: PredictPayload = { 
+    R_Score: scoringTable.R[counts.R],
+    I_Score: scoringTable.I[counts.I],
+    A_Score: scoringTable.A[counts.A],
+    S_Score: scoringTable.S[counts.S],
+    E_Score: scoringTable.E[counts.E],
+    C_Score: scoringTable.C[counts.C],
+    
+    // TIPI mặc định là 4 (Trung lập) nếu chưa chọn
+    TIPI1: answers["TIPI1"] !== undefined ? answers["TIPI1"] : 4,
+      TIPI2: answers["TIPI2"] !== undefined ? answers["TIPI2"] : 4,
+      TIPI3: answers["TIPI3"] !== undefined ? answers["TIPI3"] : 4,
+      TIPI4: answers["TIPI4"] !== undefined ? answers["TIPI4"] : 4,
+      TIPI5: answers["TIPI5"] !== undefined ? answers["TIPI5"] : 4,
+      TIPI6: answers["TIPI6"] !== undefined ? answers["TIPI6"] : 4,
+      TIPI7: answers["TIPI7"] !== undefined ? answers["TIPI7"] : 4,
+      TIPI8: answers["TIPI8"] !== undefined ? answers["TIPI8"] : 4,
+      TIPI9: answers["TIPI9"] !== undefined ? answers["TIPI9"] : 4,
+      TIPI10: answers["TIPI10"] !== undefined ? answers["TIPI10"] : 4,
+  };
+
+  // Ghi đè 10 câu hỏi TIPI
+  Object.entries(answers).forEach(([qid, optIdx]) => {
+    const q = personalityQuestions.find(q => q.id === qid);
+    if (!q) return;
+
+    const option = q.options[optIdx] as any; 
+    if (qid.startsWith("tipi_") && option?.score !== undefined) {
+      const tipiNum = qid.split("_")[1]; 
+      const key = `TIPI${tipiNum}` as keyof PredictPayload;
+      (s as any)[key] = option.score; 
+    }
+  });
+
+  return s;
+}
+// ─── TÍNH ĐIỂM BIG FIVE (OCEAN) ───────────────────────────────────────────────
+function calcBigFive(payload: PredictPayload) {
+  const reverseScore = (score: number) => 8 - score;
+  return {
+    Extraversion: (payload.TIPI1 + reverseScore(payload.TIPI6)) / 2,
+    Agreeableness: (payload.TIPI7 + reverseScore(payload.TIPI2)) / 2,
+    Conscientiousness: (payload.TIPI3 + reverseScore(payload.TIPI8)) / 2,
+    EmotionalStability: (payload.TIPI9 + reverseScore(payload.TIPI4)) / 2,
+    Openness: (payload.TIPI5 + reverseScore(payload.TIPI10)) / 2,
+  };
+}
+
+// ─── GỌI BACKEND API SINH INSIGHT ─────────────────────────────────────────────
+async function fetchInsight(
+  answers: Record<string, number>,
+  answeredCount: number,
+  isFinal: boolean
+): Promise<string> {
+  const sc = calcModelPayload(answers);
+  const bigFive = calcBigFive(sc); // Tính toán điểm Big Five
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/insight", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        scores: sc,
+        bigFive: bigFive, // Gửi kèm Big Five cho Backend
+        answeredCount: answeredCount,
+        isFinal: isFinal
+      }),
+    });
+    
+    if (!res.ok) throw new Error("Lỗi kết nối Backend");
+    const data = await res.json();
+    return data.insight;
+
+  } catch (error) {
+    return isFinal 
+      ? "Dựa trên kết quả, bạn có hồ sơ tính cách độc đáo với nhiều tiềm năng phát triển!"
+      : "Bạn đang làm rất tốt! Tiếp tục để nhận phân tích chính xác hơn nhé.";
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 export function SurveyPage() {
   const navigate = useNavigate();
-  const [currentStep, setCurrentStep] = useState<SurveyStep>("personality");
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+
+  // TẤT CẢ useState PHẢI NẰM TRONG NÀY!
+  const [step, setStep] = useState<SurveyStep>("questions");
+  const [currentQ, setCurrentQ] = useState(0);
   const [answers, setAnswers] = useState<Record<string, number>>({});
-  
-  // State tạo hiệu ứng loading khi chờ AI trả kết quả
-  const [isAnalyzing, setIsAnalyzing] = useState(false); 
+  const [insightRoundsShown, setInsightRoundsShown] = useState<Set<number>>(new Set());
 
-  // Interests state
+  const [insightText, setInsightText] = useState("");
+  const [insightLoading, setInsightLoading] = useState(false);
+
+  const [personalityText, setPersonalityText] = useState("");
+  const [personalityLoading, setPersonalityLoading] = useState(false);
+
   const [interests, setInterests] = useState<Interest[]>([]);
-  const [newInterestName, setNewInterestName] = useState("");
+  const [newInterest, setNewInterest] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const addInterest = () => {
-    if (newInterestName.trim()) {
-      setInterests([...interests, { name: newInterestName.trim(), level: 5 }]);
-      setNewInterestName("");
-    }
+  const [prelimJobs, setPrelimJobs] = useState<any[]>([]);
+
+  const total = personalityQuestions.length;
+  const currentAnswered = currentQ + 1;
+
+  const progress =
+    step === "questions" || step === "insight" ? (currentAnswered / total) * 70
+    : step === "personality-result" ? 82
+    : 92;
+
+  // Lọc riêng điểm RIASEC để không bị lỗi undefined khi render biểu đồ
+  const currentPayload = calcModelPayload(answers);
+  const riasecSorted = Object.entries(currentPayload)
+    .filter(([k]) => k.includes("_Score")) // SỬA LỖI Ở ĐÂY: Chỉ lấy 6 điểm RIASEC
+    .map(([k, v]) => ({ 
+      key: k.replace("_Score", ""), 
+      score: v as number, 
+      pct: Math.round(((v as number) / 40) * 100), 
+      ...RIASEC_META[k.replace("_Score", "")] 
+    }))
+    .sort((a, b) => b.score - a.score);
+
+  // ── Answer ──────────────────────────────────────────────────────────────────
+  const handleAnswer = (idx: number) => {
+    setAnswers(prev => ({ ...prev, [personalityQuestions[currentQ].id]: idx }));
   };
 
-  const removeInterest = (index: number) => {
-    setInterests(interests.filter((_, i) => i !== index));
-  };
+  // ── Next ────────────────────────────────────────────────────────────────────
+  const handleNext = async () => {
+    const isLast = currentQ === total - 1;
 
-  const updateInterestLevel = (index: number, level: number) => {
-    const updated = [...interests];
-    updated[index].level = level;
-    setInterests(updated);
-  };
-
-  // --- HÀM LOGIC MỚI: CHUYỂN ĐỔI ĐÁP ÁN SANG ĐIỂM RIASEC ---
-  const calculateRIASEC = () => {
-    // 1. Nâng điểm Baseline lên 15 (Mức trung lập của bài test 48 câu)
-    const scores = {
-      R_Score: 15, I_Score: 15, A_Score: 15, 
-      S_Score: 15, E_Score: 15, C_Score: 15
-    };
-
-    const traitToRIASEC: Record<string, string> = {
-      "technical": "R", "practical": "R", "hands-on": "R",
-      "analytical": "I", "problem-solving": "I", "studious": "I", "focused": "I", "independent": "I",
-      "creative": "A", "artistic": "A", "innovative": "A", "flexible": "A",
-      "social": "S", "collaborative": "S", "communicative": "S", "dynamic": "S",
-      "leadership": "E", "energetic": "E",
-      "detail-oriented": "C"
-    };
-
-    // 2. Cộng điểm
-    Object.entries(answers).forEach(([questionId, optionIdx]) => {
-      const question = personalityQuestions.find(q => q.id === questionId);
-      if (question) {
-        const traits = question.options[optionIdx].traits;
-        traits.forEach(trait => {
-          const bucket = traitToRIASEC[trait];
-          if (bucket) {
-            // Tăng hệ số nhân lên 8 để bù đắp cho số lượng câu hỏi ít
-            scores[`${bucket}_Score` as keyof typeof scores] += 8;
-          }
-        });
-      }
-    });
-
-    // 3. Đảm bảo không điểm nào vượt quá 40 (Mức tối đa của AI)
-    Object.keys(scores).forEach(key => {
-      if (scores[key as keyof typeof scores] > 40) {
-        scores[key as keyof typeof scores] = 40;
-      }
-    });
-
-    return scores;
-  };
-
-  // --- HÀM CHUYỂN BƯỚC ĐƯỢC CẬP NHẬT THÀNH ASYNC ĐỂ GỌI API ---
-  const handleNextStep = async () => {
-    if (currentStep === "personality") {
-      if (currentQuestion < personalityQuestions.length - 1) {
-        setCurrentQuestion(currentQuestion + 1);
-      } else {
-        setCurrentStep("interests");
-      }
-    } else if (currentStep === "interests") {
-      setIsAnalyzing(true); // Bật trạng thái loading
-      
-      // Lưu dữ liệu thô vào máy
-      localStorage.setItem("userInterests", JSON.stringify(interests));
-      localStorage.setItem("userAnswers", JSON.stringify(answers));
-
-      // Tính điểm chuẩn bị gửi cho AI
-      const payload = calculateRIASEC();
-
+    if (isLast) {
+      setPersonalityLoading(true);
+      setStep("personality-result");
       try {
-        // GỌI API BACKEND
-        const response = await fetch("http://127.0.0.1:8000/predict", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
+        const text = await fetchInsight(answers, total, true);
+        setPersonalityText(text);
+      } catch {
+        setPersonalityText("Dựa trên kết quả, bạn có hồ sơ tính cách độc đáo với nhiều tiềm năng phát triển!");
+      } finally {
+        setPersonalityLoading(false);
+      }
+      return;
+    }
+
+    if (INSIGHT_AFTER.includes(currentQ) && !insightRoundsShown.has(currentQ)) {
+      setInsightLoading(true);
+      setStep("insight");
+      setInsightRoundsShown(prev => new Set([...prev, currentQ]));
+      
+      try {
+        const payload = calcModelPayload(answers);
+        const bigFiveScores = calcBigFive(payload);
+        
+        const [insightRes, predictRes] = await Promise.all([
+          fetch("http://127.0.0.1:8000/insight", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              scores: payload,
+              bigFive: bigFiveScores, // SỬA LỖI: Gửi Big Five
+              answeredCount: currentAnswered,
+              isFinal: false
+            }),
+          }),
+          fetch("http://127.0.0.1:8000/predict", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          })
+        ]);
+
+        if (!insightRes.ok || !predictRes.ok) throw new Error("API Error");
+
+        const insightData = await insightRes.json();
+        const predictData = await predictRes.json();
+
+        setInsightText(insightData.insight);
+
+        const aiTop3Majors = predictData.predictions.slice(0, 3);
+
+        const matchedJobs = aiTop3Majors.map((aiJob: any) => {
+          // SỬA LỖI Ở ĐÂY: Dùng majorName thay vì name
+          const foundJob = careers.find(c => 
+            c.majorName.toLowerCase() === aiJob.major.toLowerCase()
+          );
+          
+          return foundJob || { 
+            name: aiJob.major, 
+            description: "AI đang thu thập thêm dữ liệu để phân tích chi tiết ngành này...", 
+            coreSkills: ["Đang phân tích..."] 
+          };
         });
 
-        if (!response.ok) throw new Error("Lỗi mạng từ Backend");
-
-        const data = await response.json();
-
-        // Lưu kết quả dự đoán của AI vào máy
-        localStorage.setItem("aiPredictions", JSON.stringify(data.predictions));
-        
-        // Chuyển trang sang Dashboard hiển thị
-        navigate("/dashboard");
+        setPrelimJobs(matchedJobs);
 
       } catch (error) {
-        console.error("Lỗi AI Backend:", error);
-        alert("Không thể kết nối đến Backend AI. Hãy chắc chắn bạn đã chạy lệnh 'uvicorn main:app --reload' ở Terminal Python!");
+        setInsightText("Bạn đang làm rất tốt! Tiếp tục để nhận phân tích chính xác hơn nhé.");
+        setPrelimJobs(careers.slice(0, 3)); 
       } finally {
-        setIsAnalyzing(false); // Tắt trạng thái loading
+        setInsightLoading(false);
       }
+      return;
     }
+
+    setCurrentQ(q => q + 1);
   };
-  
-  const handlePrevStep = () => {
-    if (currentStep === "personality" && currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    } else if (currentStep === "interests") {
-      setCurrentStep("personality");
-      setCurrentQuestion(personalityQuestions.length - 1);
+
+  const continueFromInsight = () => {
+    setStep("questions");
+    setCurrentQ(q => q + 1);
+  };
+
+  // ── Submit ──────────────────────────────────────────────────────────────────
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    localStorage.setItem("userInterests", JSON.stringify(interests));
+    localStorage.setItem("userAnswers", JSON.stringify(answers));
+    const payload = calcModelPayload(answers);
+    try {
+      const res = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      localStorage.setItem("aiPredictions", JSON.stringify(data.predictions));
+      navigate("/dashboard");
+    } catch {
+      alert("Không thể kết nối Backend AI. Hãy chạy 'uvicorn main:app --reload'!");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const canProceed = () => {
-    if (currentStep === "personality")
-      return answers[personalityQuestions[currentQuestion].id] !== undefined;
-    if (currentStep === "interests") return true;
-    return false;
+  const addInterest = () => {
+    if (!newInterest.trim()) return;
+    setInterests(p => [...p, { name: newInterest.trim(), level: 5 }]);
+    setNewInterest("");
   };
 
-  const getStepProgress = () => {
-    if (currentStep === "personality") {
-      return 33 + (currentQuestion / personalityQuestions.length) * 33;
-    }
-    return 66;
-  };
-
+  // ═══════════════════════════════════════════════════════════════════════════
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-2xl mx-auto">
+
           {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-4xl mb-2">Khảo Sát Nghề Nghiệp</h1>
-            <p className="text-gray-600">
-              Hoàn thành các bước sau để nhận phân tích chi tiết
-            </p>
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold mb-1">Khảo Sát Định Hướng Nghề Nghiệp</h1>
+            <p className="text-gray-500 text-sm">AI phân tích tính cách và gợi ý ngành phù hợp</p>
           </div>
 
-          {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="flex justify-between mb-2 text-sm">
-              <span
-                className={currentStep === "personality" ? "text-blue-600" : "text-gray-500"}
-              >
-                Trắc nghiệm tính cách
-              </span>
-              <span className={currentStep === "interests" ? "text-blue-600" : "text-gray-500"}>
-                Sở thích
-              </span>
+          {/* Progress */}
+          <div className="mb-6">
+            <div className="flex justify-between text-xs text-gray-400 mb-1">
+              <span>Câu hỏi</span><span>Phân tích sơ bộ</span><span>Tính cách</span><span>Đánh giá</span><span>Sở thích</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-gradient-to-r from-blue-600 to-purple-600 h-2 rounded-full transition-all duration-500"
-                style={{ width: `${getStepProgress()}%` }}
-              />
+              <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-700"
+                style={{ width: `${progress}%` }} />
             </div>
           </div>
 
-          {/* Content */}
-          <div className="bg-white rounded-2xl shadow-xl p-8">
-            {/* Personality Test Step */}
-            {currentStep === "personality" && (
-              <div>
-                <div className="mb-6">
-                  <div className="flex justify-between text-sm text-gray-600 mb-2">
-                    <span>Câu hỏi {currentQuestion + 1}/{personalityQuestions.length}</span>
-                    <span>{Math.round(((currentQuestion + 1) / personalityQuestions.length) * 100)}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1">
-                    <div
-                      className="bg-purple-600 h-1 rounded-full transition-all"
-                      style={{
-                        width: `${((currentQuestion + 1) / personalityQuestions.length) * 100}%`,
-                      }}
-                    />
-                  </div>
+          {/* ── QUESTIONS ───────────────────────────────────────────────────── */}
+          {step === "questions" && (
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex justify-between text-sm text-gray-400 mb-3">
+                <span>Câu {currentQ + 1} / {total}</span>
+                <span>{Math.round(((currentQ + 1) / total) * 100)}%</span>
+              </div>
+              <div className="w-full bg-gray-100 rounded-full h-1 mb-6">
+                <div className="bg-purple-500 h-1 rounded-full transition-all"
+                  style={{ width: `${((currentQ + 1) / total) * 100}%` }} />
+              </div>
+
+              <h2 className="text-xl font-semibold mb-6 leading-relaxed">
+                {personalityQuestions[currentQ].question}
+              </h2>
+
+              <div className="space-y-3 mb-8">
+                {personalityQuestions[currentQ].options.map((opt, idx) => (
+                  <button key={idx} onClick={() => handleAnswer(idx)}
+                    className={`w-full p-4 rounded-xl border-2 text-left text-sm transition-all ${
+                      answers[personalityQuestions[currentQ].id] === idx
+                        ? "border-purple-500 bg-purple-50 text-purple-800"
+                        : "border-gray-200 hover:border-purple-300 hover:bg-gray-50"
+                    }`}>
+                    {opt.text}
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex justify-between pt-4 border-t">
+                <button onClick={() => currentQ > 0 ? setCurrentQ(q => q - 1) : navigate(-1)}
+                  // disabled={currentQ === 0}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-500 disabled:opacity-30 text-sm">
+                  <ChevronLeft className="w-4 h-4" /> Quay lại
+                </button>
+                <button onClick={handleNext}
+                  disabled={answers[personalityQuestions[currentQ].id] === undefined}
+                  className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg disabled:opacity-40 hover:shadow-md transition-all text-sm">
+                  {currentQ === total - 1 ? "Xem phân tích tính cách" : "Tiếp tục"}
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ── INSIGHT ─────────────────────────────────────────────────────── */}
+          {step === "insight" && (
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Sparkles className="w-5 h-5 text-white" />
                 </div>
-
-                <h2 className="text-2xl mb-8">
-                  {personalityQuestions[currentQuestion].question}
-                </h2>
-
-                <div className="space-y-4">
-                  {personalityQuestions[currentQuestion].options.map((option, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => {
-                        setAnswers({
-                          ...answers,
-                          [personalityQuestions[currentQuestion].id]: idx,
-                        });
-                      }}
-                      className={`w-full p-4 rounded-xl border-2 text-left transition-all ${
-                        answers[personalityQuestions[currentQuestion].id] === idx
-                          ? "border-purple-600 bg-purple-50"
-                          : "border-gray-200 hover:border-purple-300"
-                      }`}
-                    >
-                      {option.text}
-                    </button>
-                  ))}
+                <div>
+                  <h2 className="font-semibold text-gray-800">Nhận xét sơ bộ từ AI</h2>
+                  <p className="text-xs text-gray-400">Sau {currentQ} câu đầu tiên</p>
                 </div>
               </div>
-            )}
 
-            {/* Interests Step */}
-            {currentStep === "interests" && (
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <h2 className="text-2xl">Điểm mạnh của bạn</h2>
-                  <span className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full">
-                    Không bắt buộc
-                  </span>
+              {insightLoading ? (
+                <div className="flex flex-col items-center py-10 gap-3">
+                  <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+                  <p className="text-gray-400 text-sm">AI đang phân tích câu trả lời...</p>
                 </div>
-                <p className="text-gray-600 mb-6">
-                  Thêm sở thích để kết quả định hướng chính xác hơn. Bạn có thể bỏ qua nếu chưa rõ.
-                </p>
+              ) : (
+                <>
+                  <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-5 mb-5 border border-blue-100">
+                    <p className="text-gray-700 leading-relaxed text-sm">{insightText}</p>
+                  </div>
 
-                {/* Add Interest Input */}
-                <div className="flex gap-2 mb-6">
-                  <input
-                    type="text"
-                    value={newInterestName}
-                    onChange={(e) => setNewInterestName(e.target.value)}
-                    onKeyPress={(e) => {
-                      if (e.key === "Enter") addInterest();
-                    }}
-                    placeholder="Nhập tên sở thích (VD: Thể thao, Nghệ thuật...)"
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500"
-                  />
-                  <button
-                    onClick={addInterest}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-2"
-                  >
-                    <Plus className="w-4 h-4" />
-                    Thêm
+                  <div className="mb-6">
+                    <p className="text-xs text-gray-400 mb-3">Xu hướng tính cách đang nổi lên:</p>
+                    <div className="space-y-2">
+                      {riasecSorted.slice(0, 3).map(e => (
+                        <div key={e.key} className="flex items-center gap-3">
+                          <span className="text-xs font-mono text-gray-500 w-6">{e.label}</span>
+                          <div className="flex-1 bg-gray-100 rounded-full h-2">
+                            <div className="h-2 rounded-full transition-all"
+                              style={{ width: `${e.pct}%`, background: e.color }} />
+                          </div>
+                          <span className="text-xs text-gray-400 w-8 text-right">{e.pct}%</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 🌟 HIỂN THỊ TOP 3 JOB PREVIEW 🌟 */}
+                  <div className="mt-6 mb-6 border-t border-dashed border-gray-200 pt-6">
+                    <h3 className="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                      <Target className="w-4 h-4 text-purple-500" />
+                      Top 3 Ngành phù hợp sơ bộ:
+                    </h3>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      {prelimJobs.map((job, index) => (
+                        <div key={index} className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:border-purple-300 transition-all flex flex-col">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="flex items-center justify-center w-5 h-5 rounded-full bg-purple-100 text-purple-600 text-xs font-bold">
+                              {index + 1}
+                            </span>
+                            <h4 className="font-bold text-blue-700 text-sm leading-tight">{job.name}</h4>
+                          </div>
+                          
+                          <p className="text-[11px] text-gray-500 line-clamp-3 mb-3 flex-1">
+                            {job.description}
+                          </p>
+                          
+                          <div className="flex flex-wrap gap-1 mt-auto">
+                            {job.coreSkills.slice(0, 2).map((skill: string, idx: number) => (
+                              <span key={idx} className="px-2 py-1 bg-gray-50 border border-gray-100 text-gray-600 text-[9px] rounded font-medium">
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    <p className="text-[11px] text-center text-gray-400 mt-4 italic">
+                      *Đây chỉ là dự đoán nhanh dựa trên {currentAnswered} câu. Hãy làm hết bài để AI phân tích chuẩn xác nhé!
+                    </p>
+                  </div>
+
+                  <button onClick={continueFromInsight}
+                    className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-md transition-all flex items-center justify-center gap-2 text-sm">
+                    Tiếp tục bài test <ChevronRight className="w-4 h-4" />
                   </button>
-                </div>
+                </>
+              )}
+            </div>
+          )}
 
-                {/* Interests List */}
-                <div className="space-y-4">
-                  {interests.map((interest, index) => (
-                    <div key={index} className="bg-gray-50 rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                          {interest.name}
-                        </span>
-                        <button
-                          onClick={() => removeInterest(index)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
+          {/* ── PERSONALITY RESULT ──────────────────────────────────────────── */}
+          {step === "personality-result" && (
+            <div className="space-y-4">
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Brain className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="font-semibold text-gray-800">Phân tích tính cách của bạn</h2>
+                    <p className="text-xs text-gray-400">Tổng hợp từ {total} câu trả lời</p>
+                  </div>
+                </div>
+                {personalityLoading ? (
+                  <div className="flex items-center gap-3 py-6">
+                    <Loader2 className="w-6 h-6 text-purple-500 animate-spin flex-shrink-0" />
+                    <p className="text-gray-400 text-sm">AI đang tổng hợp hồ sơ tính cách của bạn...</p>
+                  </div>
+                ) : (
+                  <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                    <p className="text-gray-700 leading-relaxed text-sm">{personalityText}</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-lg p-6">
+                <h2 className="font-semibold text-gray-800 mb-4">Bảng điểm tính cách RIASEC</h2>
+                <div className="space-y-3">
+                  {riasecSorted.map((e, i) => (
+                    <div key={e.key} className="rounded-xl p-3" style={{ background: e.bg }}>
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          {i === 0 && (
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full text-white"
+                              style={{ background: e.color }}>Nổi bật nhất</span>
+                          )}
+                          <span className="font-semibold text-sm" style={{ color: e.color }}>{e.label}</span>
+                        </div>
+                        <span className="font-bold text-sm" style={{ color: e.color }}>{e.score}/40</span>
                       </div>
-                      <div className="flex items-center gap-4">
-                        <input
-                          type="range"
-                          min="1"
-                          max="10"
-                          value={interest.level}
-                          onChange={(e) =>
-                            updateInterestLevel(index, parseInt(e.target.value))
-                          }
-                          className="flex-1"
-                        />
-                        <span className="text-lg w-12 text-center">
-                          {interest.level}/10
-                        </span>
+                      <p className="text-xs text-gray-500 mb-2">{e.desc}</p>
+                      <div className="w-full bg-white rounded-full h-2">
+                        <div className="h-2 rounded-full transition-all duration-700"
+                          style={{ width: `${e.pct}%`, background: e.color }} />
                       </div>
                     </div>
                   ))}
                 </div>
+              </div>
 
+              <button onClick={() => setStep("interests")}
+                className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-medium hover:shadow-md transition-all flex items-center justify-center gap-2 text-sm">
+                Tiếp tục thêm sở thích <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {/* ── INTERESTS ───────────────────────────────────────────────────── */}
+          {step === "interests" && (
+            <div className="bg-white rounded-2xl shadow-lg p-8">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-xl font-semibold">Sở thích của bạn</h2>
+                <span className="text-xs px-2 py-1 bg-gray-100 text-gray-500 rounded-full">Không bắt buộc</span>
+              </div>
+              <p className="text-gray-500 text-sm mb-5">
+                Thêm sở thích để kết quả định hướng chính xác hơn. Bạn có thể bỏ qua.
+              </p>
+
+              <div className="flex gap-2 mb-5">
+                <input type="text" value={newInterest}
+                  onChange={e => setNewInterest(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && addInterest()}
+                  placeholder="VD: Lập trình, Vẽ tranh, Âm nhạc..."
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:border-blue-500" />
+                <button onClick={addInterest}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center gap-1 text-sm">
+                  <Plus className="w-4 h-4" /> Thêm
+                </button>
+              </div>
+
+              <div className="space-y-3 mb-6">
+                {interests.map((s, i) => (
+                  <div key={i} className="bg-gray-50 rounded-lg p-3">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">{s.name}</span>
+                      <button onClick={() => setInterests(p => p.filter((_, j) => j !== i))}
+                        className="text-red-400 hover:text-red-600"><X className="w-4 h-4" /></button>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <input type="range" min="1" max="10" value={s.level}
+                        onChange={e => setInterests(p => p.map((x, j) => j === i ? { ...x, level: +e.target.value } : x))}
+                        className="flex-1" />
+                      <span className="text-sm text-gray-500 w-10 text-center">{s.level}/10</span>
+                    </div>
+                  </div>
+                ))}
                 {interests.length === 0 && (
-                  <div className="text-center text-gray-400 py-8 border-2 border-dashed border-gray-200 rounded-xl">
-                    <p className="mb-1">Chưa có sở thích nào.</p>
-                    <p className="text-sm">Thêm sở thích hoặc nhấn "Xem kết quả" để tiếp tục.</p>
+                  <div className="text-center text-gray-400 py-6 border-2 border-dashed border-gray-200 rounded-xl text-sm">
+                    Chưa có sở thích. Thêm hoặc nhấn "Xem kết quả" để tiếp tục.
                   </div>
                 )}
               </div>
-            )}
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8 pt-6 border-t">
-              <button
-                onClick={handlePrevStep}
-                disabled={(currentStep === "personality" && currentQuestion === 0) || isAnalyzing}
-                className="flex items-center gap-2 px-6 py-3 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeft className="w-5 h-5" />
-                Quay lại
-              </button>
-              
-              {/* Nút Tiếp tục / Xem kết quả có hiệu ứng Loading */}
-              <button
-                onClick={handleNextStep}
-                disabled={!canProceed() || isAnalyzing}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed min-w-[140px] justify-center"
-              >
-                {isAnalyzing ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Đang AI phân tích...
-                  </>
-                ) : (
-                  <>
-                    {currentStep === "interests" ? "Xem kết quả" : "Tiếp tục"}
-                    <ChevronRight className="w-5 h-5" />
-                  </>
-                )}
-              </button>
+              <div className="flex justify-between pt-4 border-t">
+                <button onClick={() => setStep("personality-result")}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-500 text-sm">
+                  <ChevronLeft className="w-4 h-4" /> Quay lại
+                </button>
+                <button onClick={handleSubmit} disabled={isSubmitting}
+                  className="flex items-center gap-2 px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg disabled:opacity-50 hover:shadow-md transition-all min-w-[150px] justify-center text-sm">
+                  {isSubmitting
+                    ? <><Loader2 className="w-4 h-4 animate-spin" /> Đang phân tích...</>
+                    : <>Xem kết quả ngành <ChevronRight className="w-4 h-4" /></>}
+                </button>
+              </div>
             </div>
-          </div>
+          )}
+
         </div>
       </div>
     </div>

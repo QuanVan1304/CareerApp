@@ -26,7 +26,7 @@ export function DashboardPage() {
       // 3. HYDRATION & SCORING
       const mergedData = aiResults.map(prediction => {
         const localData = careers.find(
-          c => c.majorName.toLowerCase() === prediction.major.toLowerCase()
+          c => c.majorName?.toLowerCase() === prediction.major.toLowerCase()
         );
 
         if (localData) {
@@ -34,9 +34,12 @@ export function DashboardPage() {
           const finalScore = calculateHybridScore(
             prediction.matchingScore, 
             userSkills, 
-            localData.requiredSkills
+            localData.requiredSkills,
           );
-
+          console.log(`Ngành: ${localData.name}`);
+          console.log(`- Điểm AI gốc: ${prediction.matchingScore}`);
+          console.log(`- Điểm Hybrid cuối: ${finalScore}`);
+          console.log(`- Kỹ năng người dùng:`, userSkills);
           return {
             ...localData,
             matchingScore: finalScore, 
@@ -63,7 +66,7 @@ export function DashboardPage() {
 
   const getMatchColor = (score: number) => {
     if (score >= 80) return "text-green-600 bg-green-100";
-    if (score >= 60) return "text-yellow-600 bg-yellow-100";
+    if (score >= 50) return "text-yellow-600 bg-yellow-100";
     return "text-orange-600 bg-orange-100";
   };
 

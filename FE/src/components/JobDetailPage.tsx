@@ -39,34 +39,33 @@ export function JobDetailPage() {
   const career = careers.find((c) => c.id === jobId);
 
   useEffect(() => {
-    const skillsData = localStorage.getItem("userInterests");
-    if (skillsData) {
-      setUserSkills(JSON.parse(skillsData));
-    }
-    let parsedSkills: string[] = [];
-    if(career){
-      let currentScore = career.matchingScore || 0;
-        const predictionsData = localStorage.getItem("aiPredictions");
-        if (predictionsData) {
-          const aiResults: AIPrediction[] = JSON.parse(predictionsData);
-          const prediction = aiResults.find(
-            (p) => p.major.trim().toLowerCase() === career.majorName.trim().toLowerCase()
-          );
+  if (!career) return;
 
-          if (prediction) {
-            currentScore = prediction.matchingScore;
-          } else {
-            console.warn("Không tìm thấy ngành này trong dự đoán của AI:", career.majorName);
-          }
-      }
-      const finalHybridScore = calculateHybridScore(
-        currentScore, 
-        parsedSkills, 
-        career.requiredSkills
-      );
-      setMatchingScore(finalHybridScore);
+  // 1. Lấy kỹ năng người dùng từ localStorage
+  const skillsData = localStorage.getItem("userInterests");
+  const parsedSkills = skillsData ? JSON.parse(skillsData) : [];
+  setUserSkills(parsedSkills); // cập nhật state để radar chart dùng
+
+  // 2. Lấy điểm AI từ localStorage — ưu tiên aiPredictions, fallback về career.matchingScore
+  let aiScore = career.matchingScore || 0;
+  const predictionsData = localStorage.getItem("aiPredictions");
+  if (predictionsData) {
+    const aiResults: AIPrediction[] = JSON.parse(predictionsData);
+    const prediction = aiResults.find(
+      (p) => p.major.trim().toLowerCase() === career.majorName.trim().toLowerCase()
+    );
+    if (prediction) {
+      aiScore = prediction.matchingScore;
+    } else {
+      console.warn("Không tìm thấy ngành trong aiPredictions:", career.majorName);
     }
-  }, [career]);
+  }
+
+  // 3. Tính hybrid score rồi set vào state
+  const finalScore = calculateHybridScore(aiScore, parsedSkills, career.requiredSkills);
+  setMatchingScore(finalScore);
+}, [career]);
+
 
   if (!career) {
     return (
