@@ -28,6 +28,7 @@ export interface Course {
   platform: string;
   url: string;
 }
+
 const tipiOptions = [
   { text: "Hoàn toàn đồng ý (Agree strongly)", score: 7 },
   { text: "Tương đối đồng ý (Agree moderately)", score: 6 },
@@ -37,6 +38,8 @@ const tipiOptions = [
   { text: "Tương đối không đồng ý (Disagree moderately)", score: 2 },
   { text: "Hoàn toàn không đồng ý (Disagree strongly)", score: 1 },
 ];
+
+// ─── DANH SÁCH NGÀNH NGHỀ & LỘ TRÌNH ──────────────────────────────────────────
 export const careers: Career[] = [
   {
     id: "computer-science",
@@ -138,6 +141,39 @@ export const careers: Career[] = [
     ]
   },
   {
+    id: "chemical-engineering",
+    majorName: "chemical engineering", // Khớp với file data.csv
+    name: "Kỹ Thuật Hóa Học / Kỹ Sư Hóa",
+    description: "Ứng dụng kiến thức Hóa, Lý và Toán để biến các nguyên liệu thô thành những sản phẩm thiết yếu hàng ngày (mỹ phẩm, thực phẩm, thuốc, năng lượng). Rất phù hợp với những bạn yêu thích khoa học tự nhiên, đam mê làm thí nghiệm (nhóm Investigative) và thích thực hành chế tạo (nhóm Realistic).",
+    matchingScore: 0,
+    coreSkills: ["Nghiên cứu & Phát triển (R&D)", "Phân tích hóa học", "Vận hành dây chuyền", "Kiểm soát chất lượng (QC/QA)"],
+    requiredSkills: { "Hóa học": 10, "Tư duy logic": 8, "Cẩn thận tỉ mỉ": 9, "Thực hành tay chân": 8 },
+    jobOutlook: "Nhu cầu cao, thu nhập tốt trong các tập đoàn sản xuất, FMCG",
+    universityMajors: ["Kỹ thuật hóa học", "Công nghệ kỹ thuật hóa học", "Hóa dược", "Công nghệ thực phẩm"],
+    roadmap: [
+      {
+        id: "p1", 
+        title: "Nền tảng Hóa học & Khám phá Kỹ thuật", 
+        description: "Ôn tập kiến thức Hóa học cốt lõi và tìm hiểu cách các nhà máy vận hành quy trình sản xuất.", 
+        duration: "3-6 tháng",
+        courses: [
+          { 
+            id: "c1", 
+            title: "College Chemistry (Hóa học Đại cương)", 
+            platform: "Khan Academy", 
+            url: "https://www.khanacademy.org/science/chemistry" 
+          },
+          { 
+            id: "c2", 
+            title: "Introduction to Chemical Engineering", 
+            platform: "Coursera", 
+            url: "https://www.coursera.org/learn/materials-science" // Khóa học đại cương về khoa học vật liệu/kỹ thuật
+          }
+        ]
+      }
+    ]
+  },
+  {
     id: "architecture",
     majorName: "architecture",
     name: "Kiến Trúc & Thiết Kế",
@@ -195,7 +231,34 @@ export const careers: Career[] = [
     requiredSkills: { "Giải quyết vấn đề": 9, "Toán": 8,  "Lý": 8, "Cẩn thận": 8 },
     jobOutlook: "Trụ cột không thể thiếu của nền công nghiệp",
     universityMajors: ["Kỹ thuật cơ khí", "Kỹ thuật điện - điện tử", "Kỹ thuật tự động hóa"],
-    roadmap: []
+    roadmap: [
+      {
+        id: "p1", 
+        title: "Tư duy Kỹ thuật & Vật lý ứng dụng", 
+        description: "Xây dựng nền tảng vững chắc về Cơ học, Điện học và làm quen với công cụ thiết kế mô phỏng (CAD/Mạch điện) dành cho người mới bắt đầu.", 
+        duration: "3-6 tháng",
+        courses: [
+          { 
+            id: "c1", 
+            title: "Electrical Engineering (Kỹ thuật Điện cơ bản)", 
+            platform: "Khan Academy", 
+            url: "https://www.khanacademy.org/science/electrical-engineering" 
+          },
+          { 
+            id: "c2", 
+            title: "Làm quen thiết kế 3D & Mạch điện ảo (Tinkercad)", 
+            platform: "Autodesk", 
+            url: "https://www.tinkercad.com/" 
+          },
+          { 
+            id: "c3", 
+            title: "Introduction to Engineering Mechanics (Cơ học kỹ thuật)", 
+            platform: "Coursera", 
+            url: "https://www.coursera.org/learn/engineering-mechanics-statics" 
+          }
+        ]
+      }
+    ]
   },
   {
     id: "medicine",
@@ -521,102 +584,168 @@ export const careers: Career[] = [
         courses: [{ id: "c1", title: "Introduction to Philosophy", platform: "Coursera (UoE)", url: "https://www.coursera.org/learn/philosophy" }]
       }
     ]
+  },
+  {
+    id: "mathematics",
+    majorName: "mathematics", // Khớp với file data.csv
+    name: "Toán Học / Toán Ứng Dụng",
+    description: "Không chỉ là giải phương trình trên giấy, Toán học hiện đại là nền tảng để xây dựng Trí tuệ nhân tạo (AI), phân tích dữ liệu và dự báo kinh tế. Ngành này là 'chân ái' của những bạn có tư duy logic sắc bén (Investigative), thích làm việc với con số và giải quyết các bài toán phức tạp bằng mô hình định lượng.",
+    matchingScore: 0,
+    coreSkills: ["Tư duy logic", "Mô hình hóa toán học", "Thống kê & Xác suất", "Phân tích định lượng"],
+    requiredSkills: { "Toán học": 10, "Tư duy Logic": 10, "Phân tích dữ liệu": 8, "Sự kiên nhẫn": 9 },
+    jobOutlook: "Nhu cầu khổng lồ trong mảng AI, Data Science và Tài chính định lượng",
+    universityMajors: ["Toán ứng dụng", "Toán tin", "Thống kê và Khoa học dữ liệu", "Sư phạm Toán"],
+    roadmap: [
+      {
+        id: "p1", 
+        title: "Nền tảng Toán học Đại học & Khoa học Dữ liệu", 
+        description: "Làm quen với Giải tích, Đại số tuyến tính và cách ứng dụng Toán học vào lập trình hoặc phân tích dữ liệu (Data Science).", 
+        duration: "3-6 tháng",
+        courses: [
+          { 
+            id: "c1", 
+            title: "Calculus 1 (Giải tích cơ bản)", 
+            platform: "Khan Academy", 
+            url: "https://www.khanacademy.org/math/calculus-1" 
+          },
+          { 
+            id: "c2", 
+            title: "Data Science Math Skills (Toán cho Khoa học dữ liệu)", 
+            platform: "Coursera", 
+            url: "https://www.coursera.org/learn/datasciencemathskills" 
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: "communication",
+    majorName: "communication", // Khớp với file data.csv
+    name: "Truyền Thông & Quan Hệ Công Chúng (PR)",
+    description: "Nghệ thuật của ngôn từ và sự kết nối. Đây là sân chơi dành cho những bạn hướng ngoại (Social & Enterprising), thích viết lách, sáng tạo nội dung (Artistic), tự tự giao tiếp trước đám đông và có sự nhạy bén tuyệt vời với các xu hướng (trend) của xã hội.",
+    matchingScore: 0,
+    coreSkills: ["Sáng tạo nội dung (Content)", "Giao tiếp công chúng", "Kể chuyện (Storytelling)", "Xử lý khủng hoảng"],
+    requiredSkills: { "Giao tiếp": 10, "Viết lách": 9, "Nắm bắt tâm lý": 8, "Sáng tạo linh hoạt": 9 },
+    jobOutlook: "Cơ hội rộng mở tại các Agency, Đài truyền hình, Doanh nghiệp lớn",
+    universityMajors: ["Truyền thông đa phương tiện", "Quan hệ công chúng (PR)", "Báo chí", "Đông phương học"],
+    roadmap: [
+      {
+        id: "p1", 
+        title: "Kỹ năng Viết & Nhập môn Truyền thông", 
+        description: "Khám phá cách xây dựng chiến lược truyền thông, viết thông cáo báo chí và nghệ thuật kể chuyện thu hút người đọc.", 
+        duration: "2-4 tháng",
+        courses: [
+          { 
+            id: "c1", 
+            title: "Introduction to Public Relations and the Media", 
+            platform: "Coursera", 
+            url: "https://www.coursera.org/learn/public-relations" 
+          },
+          { 
+            id: "c2", 
+            title: "Good with Words: Writing and Editing (Kỹ năng viết lách)", 
+            platform: "Coursera", 
+            url: "https://www.coursera.org/learn/writing-editing-words" 
+          }
+        ]
+      }
+    ]
   }
 ];
 
+// ─── BỘ CÂU HỎI TRẮC NGHIỆM ───────────────────────────────────────────────────
 export const personalityQuestions = [
   // --- 10 CÂU HỎI RIASEC (Cân bằng: Mỗi nhóm xuất hiện đúng 5 lần) ---
   {
     id: "q1",
-    question: "Bạn thích phong cách làm việc nào nhất?",
+    question: "Trong học tập hoặc hoạt động ngoại khóa, bạn thích làm gì nhất?",
     options: [
-      { text: "Làm việc với công cụ, máy móc hoặc thực hành tay chân", traits: ["R"] },
-      { text: "Đọc tài liệu, nghiên cứu lý thuyết và phân tích dữ liệu", traits: ["I"] },
-      { text: "Tự do sáng tạo, lên ý tưởng thiết kế mới mẻ", traits: ["A"] },
+      { text: "Thực hành trực tiếp, làm thí nghiệm, tự tay lắp ráp/chế tạo đồ vật", traits: ["R"] },
+      { text: "Đọc sách, tìm hiểu nguyên lý sâu xa, giải quyết các bài toán khó", traits: ["I"] },
+      { text: "Tự do sáng tạo, vẽ vời, thiết kế, viết lách hoặc lên ý tưởng nghệ thuật", traits: ["A"] },
     ],
   },
   {
     id: "q2",
-    question: "Động lực lớn nhất của bạn trong công việc là gì?",
+    question: "Điều gì làm bạn cảm thấy hào hứng và có động lực nhất?",
     options: [
-      { text: "Được lắng nghe, giúp đỡ và kết nối mọi người", traits: ["S"] },
-      { text: "Đạt được mục tiêu doanh thu, thăng tiến và lãnh đạo", traits: ["E"] },
-      { text: "Mọi thứ diễn ra trật tự, đúng quy trình và an toàn", traits: ["C"] },
+      { text: "Được lắng nghe, giúp đỡ bạn bè và tham gia các hoạt động cộng đồng", traits: ["S"] },
+      { text: "Được dẫn dắt nhóm, tổ chức sự kiện và khẳng định bản lĩnh cá nhân", traits: ["E"] },
+      { text: "Mọi thứ được lên kế hoạch rõ ràng, gọn gàng và hoàn thành đúng hạn", traits: ["C"] },
     ],
   },
   {
     id: "q3",
-    question: "Môi trường lý tưởng của bạn trông như thế nào?",
+    question: "Tưởng tượng về môi trường đại học lý tưởng của bạn, nó sẽ trông như thế nào?",
     options: [
-      { text: "Không gian mở (ngoài trời) hoặc xưởng thực hành", traits: ["R"] },
-      { text: "Nơi có sự tương tác, chăm sóc và giao tiếp liên tục", traits: ["S"] },
-      { text: "Nơi có tính cạnh tranh cao, nhịp độ nhanh và ra quyết định", traits: ["E"] },
+      { text: "Có nhiều buổi đi thực địa ngoài trời hoặc làm việc trong xưởng/phòng lab", traits: ["R"] },
+      { text: "Môi trường thân thiện, hòa đồng, sinh viên thường xuyên tương tác và hỗ trợ nhau", traits: ["S"] },
+      { text: "Môi trường năng động, nhịp độ nhanh, nhiều cuộc thi và thử thách để cạnh tranh", traits: ["E"] },
     ],
   },
   {
     id: "q4",
-    question: "Trong một dự án nhóm, bạn thường nhận vai trò gì?",
+    question: "Khi làm bài tập nhóm trên lớp, bạn thường tự tin nhận vai trò gì?",
     options: [
-      { text: "Tìm hiểu sâu kiến thức nền tảng và tìm nguyên nhân gốc rễ", traits: ["I"] },
-      { text: "Đảm nhận phần hình ảnh, trình bày hoặc nghĩ ra góc nhìn độc lạ", traits: ["A"] },
-      { text: "Lập bảng kế hoạch chi tiết, chia task và theo dõi deadline", traits: ["C"] },
+      { text: "Người tìm kiếm tài liệu, nghiên cứu thông tin và phân tích số liệu chuyên sâu", traits: ["I"] },
+      { text: "Người thiết kế slide PowerPoint, làm video hoặc lên kịch bản thuyết trình độc lạ", traits: ["A"] },
+      { text: "Người lập timeline, tổng hợp file Word, chia task và nhắc nhở deadline", traits: ["C"] },
     ],
   },
   {
     id: "q5",
-    question: "Cách tốt nhất để bạn học một kỹ năng mới là gì?",
+    question: "Khi cần học một kỹ năng mới (ví dụ: dùng một phần mềm học tập), thói quen của bạn là gì?",
     options: [
-      { text: "Tự tay tháo lắp, làm thử và rút kinh nghiệm trực tiếp", traits: ["R"] },
-      { text: "Học cách ứng dụng nó để đàm phán hoặc kinh doanh sinh lời", traits: ["E"] },
-      { text: "Ghi chép cẩn thận, làm theo đúng từng bước của giáo trình", traits: ["C"] },
+      { text: "Bắt tay vào làm thử ngay, vừa làm vừa tự rút kinh nghiệm qua những lỗi sai trong quá trình thực hành.", traits: ["R"] },
+      { text: "Ưu tiên tìm hiểu xem kỹ năng này có mang lại lợi thế gì để giúp mình đạt được kết quả học tập cao hơn không.", traits: ["E"] },
+      { text: "Tìm các video hướng dẫn bài bản, ghi chú cẩn thận và thực hiện tuần tự theo đúng từng bước cơ bản.", traits: ["C"] },
     ],
-  },
+  },  
   {
     id: "q6",
-    question: "Bạn xử lý thế nào khi có bất đồng ý kiến?",
+    question: "Nếu nhóm của bạn xảy ra bất đồng ý kiến khi đang bàn kế hoạch, bạn sẽ xử lý thế nào?",
     options: [
-      { text: "Hòa giải cảm xúc, đặt mình vào vị trí của đối phương", traits: ["S"] },
-      { text: "Dùng logic, số liệu khách quan để chứng minh đúng sai", traits: ["I"] },
-      { text: "Đề xuất một giải pháp đột phá nằm ngoài khuôn khổ", traits: ["A"] },
+      { text: "Khuyên mọi người bình tĩnh, tìm cách dung hòa các ý kiến để giữ không khí vui vẻ và đoàn kết.", traits: ["S"] },
+      { text: "Lắng nghe kỹ từng lập luận, phân tích ưu/nhược điểm một cách logic để chỉ ra giải pháp tốt nhất.", traits: ["I"] },
+      { text: "Chuyển hướng sự căng thẳng bằng cách đưa ra một ý tưởng hoàn toàn mới mẻ hoặc một câu nói đùa nhẹ nhàng.", traits: ["A"] },
     ],
   },
   {
     id: "q7",
-    question: "Vào ngày cuối tuần rảnh rỗi, bạn ưu tiên làm gì?",
+    question: "Sau một tuần học tập căng thẳng, ngày nghỉ cuối tuần của bạn thường diễn ra như thế nào?",
     options: [
-      { text: "Sửa chữa đồ đạc, chơi thể thao cường độ cao hoặc làm vườn", traits: ["R"] },
-      { text: "Sắp xếp lại tủ đồ, dọn dẹp phòng ốc hoặc tính toán chi tiêu", traits: ["C"] },
-      { text: "Đi xem triển lãm, vẽ tranh, chụp ảnh hoặc chơi nhạc cụ", traits: ["A"] },
+      { text: "Tham gia các môn thể thao vận động, hoặc tự tay sửa chữa, nâng cấp đồ dùng cá nhân trong phòng.", traits: ["R"] },
+      { text: "Dọn dẹp góc học tập cho gọn gàng, sắp xếp tài liệu và viết danh sách công việc cần làm cho tuần tới.", traits: ["C"] },
+      { text: "Dành thời gian yên tĩnh để nghe nhạc, xem phim, chụp ảnh, vẽ tranh hoặc viết lách theo sở thích.", traits: ["A"] },
     ],
   },
   {
     id: "q8",
-    question: "Theo bạn, điều gì làm nên giá trị của một con người?",
+    question: "Theo bạn, điều gì làm nên sức hút lớn nhất ở một con người?",
     options: [
-      { text: "Khí chất lãnh đạo, sự tự chủ và khả năng tạo ra tài sản", traits: ["E"] },
-      { text: "Trí tuệ uyên bác, không ngừng học hỏi và khám phá sự thật", traits: ["I"] },
-      { text: "Lòng trắc ẩn, sự tử tế và những đóng góp cho cộng đồng", traits: ["S"] },
+      { text: "Sự tự tin, bản lĩnh dẫn dắt và khát vọng đạt được thành công lớn", traits: ["E"] },
+      { text: "Trí tuệ sâu sắc, hiểu biết rộng và khả năng suy luận nhạy bén", traits: ["I"] },
+      { text: "Lòng nhân ái, sự tử tế và biết cách quan tâm đến những người xung quanh", traits: ["S"] },
     ],
   },
   {
     id: "q9",
-    question: "Khi bắt đầu sử dụng một phần mềm/ứng dụng mới, bạn:",
+    question: "Khi đứng trước quyết định chọn ngành, chọn trường Đại học, bạn thường ưu tiên tìm hiểu thông tin theo cách nào?",
     options: [
-      { text: "Bấm thử các nút xem tính năng của nó hoạt động ra sao", traits: ["R"] },
-      { text: "Làm theo đúng phần hướng dẫn sử dụng (Tutorial) từng bước", traits: ["C"] },
-      { text: "Tò mò về cách thuật toán bên dưới phần mềm đó được lập trình", traits: ["I"] },
+      { text: "Xem các video thực tế về công việc, tham quan cơ sở vật chất để biết sinh viên ngành đó trực tiếp làm nghề như thế nào.", traits: ["R"] },
+      { text: "Tự mình đọc các bài phân tích chuyên môn, nghiên cứu sâu về bản chất của ngành học và những vấn đề mà ngành đó giải quyết.", traits: ["I"] },
+      { text: "Tra cứu kỹ lưỡng về điểm chuẩn các năm, chương trình đào tạo cụ thể và ưu tiên những ngành có cơ hội việc làm ổn định.", traits: ["C"] },
     ],
   },
   {
     id: "q10",
-    question: "Bạn thích nhận được lời khen nào nhất?",
+    question: "Hãy thử hình dung về bản thân khi đã tốt nghiệp và đi làm, bạn mong muốn sự nghiệp của mình sẽ trông như thế nào?",
     options: [
-      { text: "\"Bạn là người rất ấm áp, tinh tế và đáng tin cậy!\"", traits: ["S"] },
-      { text: "\"Bạn sinh ra để làm một nhà quản lý / lãnh đạo xuất chúng!\"", traits: ["E"] },
-      { text: "\"Ý tưởng của bạn thực sự khác biệt và mang đầy chất nghệ thuật!\"", traits: ["A"] },
+      { text: "Một công việc mang lại giá trị tốt đẹp cho xã hội, nơi bạn được làm việc với con người, giúp đỡ và hỗ trợ người khác.", traits: ["S"] },
+      { text: "Một vị trí có sức ảnh hưởng (quản lý, điều hành), có lộ trình thăng tiến rõ ràng, làm chủ tài chính và dẫn dắt đội nhóm.", traits: ["E"] },
+      { text: "Một công việc linh hoạt, không bị gò bó trong khuôn khổ, cho phép bạn tự do sáng tạo và để lại những dấu ấn cá nhân.", traits: ["A"] },
     ],
   },
-
   // --- 10 CÂU HỎI TIPI BẮT BUỘC ĐỂ GỬI CHO AI ---
   { id: "tipi_1", question: "Tôi thấy bản thân mình là người: Hướng ngoại, nhiệt tình.", options: tipiOptions },
   { id: "tipi_2", question: "Tôi thấy bản thân mình là người: Hay chỉ trích, thích tranh luận.", options: tipiOptions },
@@ -629,3 +758,359 @@ export const personalityQuestions = [
   { id: "tipi_9", question: "Tôi thấy bản thân mình là người: Bình tĩnh, cảm xúc ổn định.", options: tipiOptions },
   { id: "tipi_10", question: "Tôi thấy bản thân mình là người: Theo khuôn phép truyền thống, ít sáng tạo.", options: tipiOptions }
 ];
+
+// ─── DỮ LIỆU LÀM GIÀU (ENRICHMENT) CHO TỪNG NGÀNH ────────────────────────────
+export const CAREER_ENRICHMENT: Record<string, {
+  emoji: string;
+  tagline: string;
+  highlight: string;
+  salaryRange: string;
+  careerPath: { year: string; title: string; desc: string}[];
+  whyChoose: { icon: string; text: string }[];
+  companies: string[];
+  funFact: string;
+}> = {
+  "computer-science": {
+    emoji: "💻", tagline: "Xây dựng tương lai bằng những dòng code",
+    highlight: "Top 3 ngành có mức lương cao nhất VN 2024",
+    salaryRange: "15 – 80 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–2", title: "Junior Developer", desc: "Học nền tảng, đóng góp vào dự án thực tế"},
+      { year: "Năm 3–5", title: "Software Engineer", desc: "Tự chủ thiết kế tính năng, review code" },
+      { year: "Năm 5+", title: "Senior / Tech Lead", desc: "Kiến trúc hệ thống, dẫn dắt team" },
+    ],
+    whyChoose: [
+      { icon: "🚀", text: "Nhu cầu tuyển dụng tăng 25%/năm, luôn thiếu nhân sự" },
+      { icon: "🌍", text: "Làm remote cho công ty nước ngoài ngay từ Việt Nam" },
+      { icon: "🤖", text: "Đứng đầu làn sóng AI — bạn tạo ra công nghệ, không bị thay thế" },
+      { icon: "🎯", text: "1 năm kinh nghiệm có thể kiếm hơn nhiều ngành 5 năm" },
+    ],
+    companies: ["VNG", "Grab", "Shopee", "FPT", "Viettel Digital", "Google", "Amazon"],
+    funFact: "Một Software Engineer giỏi có thể làm việc cho startup Silicon Valley từ Hà Nội với mức lương $3,000–$8,000/tháng.",
+  },
+  "psychology": {
+    emoji: "🧠", tagline: "Hiểu người khác, thay đổi thế giới từ bên trong",
+    highlight: "Ngành tăng trưởng mạnh nhất hậu COVID-19",
+    salaryRange: "10 – 40 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Chuyên viên Tâm lý", desc: "Tham vấn cá nhân, làm việc tại trung tâm" },
+      { year: "Năm 3–6", title: "Nhà Tâm lý lâm sàng", desc: "Trị liệu chuyên sâu, xây dựng case study" },
+      { year: "Năm 6+", title: "Chuyên gia / Giảng viên", desc: "Nghiên cứu, đào tạo, mở phòng khám riêng" },
+    ],
+    whyChoose: [
+      { icon: "💙", text: "Giúp hàng trăm người thoát khỏi trầm cảm và lo âu" },
+      { icon: "📈", text: "Thị trường chăm sóc sức khỏe tâm thần VN tăng 30%/năm" },
+      { icon: "🏢", text: "Cơ hội việc làm tại doanh nghiệp (HR), bệnh viện, trường học" },
+      { icon: "🌱", text: "Nghề giúp bạn hiểu chính mình sâu sắc hơn bất kỳ ai" },
+    ],
+    companies: ["Bệnh viện Tâm thần TW", "Vinmec", "Trường học", "HR các tập đoàn", "Phòng khám tư"],
+    funFact: "Tại Mỹ, một nhà tâm lý học lâm sàng kiếm trung bình $90,000/năm. Xu hướng này đang dần hình thành tại VN.",
+  },
+  "business": {
+    emoji: "📊", tagline: "Từ ý tưởng đến đế chế — bạn là người dẫn dắt",
+    highlight: "Ngành đào tạo ra nhiều CEO nhất Việt Nam",
+    salaryRange: "12 – 100 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–2", title: "Business Analyst / Executive", desc: "Phân tích thị trường, hỗ trợ ra quyết định", },
+      { year: "Năm 3–5", title: "Manager", desc: "Quản lý team, điều phối chiến lược bộ phận" },
+      { year: "Năm 5+", title: "Director / CEO", desc: "Định hướng công ty, quản trị toàn diện" },
+    ],
+    whyChoose: [
+      { icon: "👑", text: "Kỹ năng lãnh đạo áp dụng được cho MỌI ngành nghề" },
+      { icon: "💰", text: "Cơ hội khởi nghiệp, tự xây dựng doanh nghiệp của riêng mình" },
+      { icon: "🌐", text: "Mạng lưới quan hệ (network) rộng — chìa khóa thành công thực sự" },
+      { icon: "🎓", text: "MBA quốc tế mở cửa đến các tập đoàn Fortune 500 toàn cầu" },
+    ],
+    companies: ["Vingroup", "Masan", "FPT", "Unilever", "P&G", "McKinsey", "BCG"],
+    funFact: "70% CEO Fortune 500 xuất thân từ ngành Quản trị Kinh doanh. Tại VN, hầu hết lãnh đạo tập đoàn lớn đều có nền tảng kinh doanh.",
+  },
+  "marketing": {
+    emoji: "📣", tagline: "Biến mọi thứ bình thường thành điều người ta muốn",
+    highlight: "Ngành sáng tạo + dữ liệu đang hot nhất hiện nay",
+    salaryRange: "10 – 50 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–2", title: "Marketing Executive", desc: "Chạy ads, quản lý nội dung, phân tích số liệu" },
+      { year: "Năm 3–4", title: "Marketing Specialist", desc: "Lên chiến lược campaign, quản lý ngân sách" },
+      { year: "Năm 5+", title: "Marketing Manager / CMO", desc: "Dẫn dắt thương hiệu, xây dựng văn hóa marketing" },
+    ],
+    whyChoose: [
+      { icon: "🎨", text: "Giao điểm hoàn hảo giữa sáng tạo và phân tích dữ liệu" },
+      { icon: "📱", text: "Mọi thương hiệu đều cần bạn — từ startup đến tập đoàn" },
+      { icon: "💡", text: "Dễ chuyển sang làm freelance hoặc mở agency riêng" },
+      { icon: "🌟", text: "Xây dựng personal brand mạnh song song với sự nghiệp" },
+    ],
+    companies: ["Unilever", "P&G", "Shopee", "Tiki", "Momo", "GS25", "Lotte Mart"],
+    funFact: "Một campaign marketing viral có thể tăng doanh thu 300% chỉ trong 1 tuần. Đó là sức mạnh của ngành này.",
+  },
+  "nursing": {
+    emoji: "🏥", tagline: "Nghề cao quý nhất — chữa lành cơ thể và tinh thần",
+    highlight: "Nhu cầu nhân lực y tế thiếu hụt 40% tại VN",
+    salaryRange: "8 – 35 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Điều dưỡng viên", desc: "Chăm sóc bệnh nhân, thực hiện y lệnh"},
+      { year: "Năm 3–7", title: "Điều dưỡng trưởng", desc: "Quản lý khoa, đào tạo nhân viên mới"},
+      { year: "Năm 7+", title: "Chuyên gia / Quản lý Y tế", desc: "Nghiên cứu, cố vấn chính sách y tế" },
+    ],
+    whyChoose: [
+      { icon: "❤️", text: "Mỗi ngày làm việc là một ngày bạn cứu sống hoặc cải thiện cuộc đời người khác" },
+      { icon: "🌍", text: "Bằng cấp y tế Việt Nam được công nhận rộng rãi, dễ ra nước ngoài làm việc" },
+      { icon: "🔒", text: "Nghề không bao giờ bị AI thay thế hoàn toàn — con người cần bàn tay người" },
+      { icon: "📈", text: "Dân số già hóa → nhu cầu điều dưỡng tăng mạnh 10-20 năm tới" },
+    ],
+    companies: ["Vinmec", "Bệnh viện Chợ Rẫy", "Bệnh viện Bạch Mai", "MEDLATEC", "Bệnh viện quốc tế"],
+    funFact: "Điều dưỡng viên tại Đức, Nhật, Canada có mức lương từ $2,500–$4,500/tháng và đang cực kỳ thiếu nhân sự.",
+  },
+  "accounting": {
+    emoji: "📋", tagline: "Người nắm giữ bí mật tài chính của mọi doanh nghiệp",
+    highlight: "100% doanh nghiệp đều cần kế toán — không bao giờ thất nghiệp",
+    salaryRange: "10 – 45 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–2", title: "Kế toán viên", desc: "Hạch toán, lập báo cáo tài chính cơ bản" },
+      { year: "Năm 3–5", title: "Kế toán trưởng", desc: "Kiểm soát toàn bộ tài chính, tư vấn thuế"},
+      { year: "Năm 5+", title: "CFO / Kiểm toán viên cao cấp", desc: "Chiến lược tài chính, quản trị rủi ro" },
+    ],
+    whyChoose: [
+      { icon: "🔢", text: "Chứng chỉ ACCA/CPA mở cửa làm việc tại Big4 toàn cầu" },
+      { icon: "💼", text: "Mọi công ty từ startup đến tập đoàn đều cần bạn" },
+      { icon: "🧮", text: "Công việc có hệ thống, rõ ràng — phù hợp người thích trật tự" },
+      { icon: "📊", text: "Nền tảng tốt để chuyển sang Tài chính, Đầu tư, Kiểm toán" },
+    ],
+    companies: ["Deloitte", "PwC", "KPMG", "EY", "Vingroup", "Masan", "Ngân hàng các loại"],
+    funFact: "Chứng chỉ ACCA (kế toán quốc tế) có thể giúp bạn làm việc tại hơn 180 quốc gia. Đây là hộ chiếu tài chính toàn cầu.",
+  },
+  "information-technology": {
+    emoji: "🌐", tagline: "Kiến trúc sư của hạ tầng số quốc gia",
+    highlight: "An ninh mạng — ngành thiếu 3,5 triệu nhân lực toàn cầu",
+    salaryRange: "12 – 60 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–2", title: "IT Support / Junior Sysadmin", desc: "Vận hành hệ thống, hỗ trợ kỹ thuật" },
+      { year: "Năm 3–5", title: "Network Engineer / Security Analyst", desc: "Thiết kế hạ tầng, bảo mật hệ thống"},
+      { year: "Năm 5+", title: "IT Manager / CISO", desc: "Quản trị hệ thống toàn tổ chức, chiến lược số" },
+    ],
+    whyChoose: [
+      { icon: "🛡️", text: "An ninh mạng đang là ưu tiên quốc gia — ngân sách khổng lồ" },
+      { icon: "🏗️", text: "Mọi doanh nghiệp chuyển đổi số đều cần bạn dẫn đường" },
+      { icon: "🔧", text: "Đa dạng chuyên sâu: Cloud, DevOps, Cybersecurity, Database..." },
+      { icon: "🌏", text: "Chứng chỉ quốc tế (AWS, CCNA) làm việc được mọi nơi trên thế giới" },
+    ],
+    companies: ["CMC Telecom", "Viettel", "VNPT", "FPT Telecom", "các ngân hàng", "công ty nước ngoài"],
+    funFact: "Một chuyên gia bảo mật mạng (Ethical Hacker) giỏi có thể kiếm $100,000+/năm làm Bug Bounty cho các tập đoàn lớn.",
+  },
+  "architecture": {
+    emoji: "🏛️", tagline: "Nơi nghệ thuật chạm đến kỹ thuật, công trình sống mãi với thời gian",
+    highlight: "Đô thị hóa VN mạnh nhất ĐNA — ngành xây dựng bùng nổ",
+    salaryRange: "12 – 60 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "KTS Thiết kế", desc: "Vẽ phối cảnh, làm mô hình, hỗ trợ dự án" },
+      { year: "Năm 3–7", title: "Kiến trúc sư chính", desc: "Chủ trì thiết kế, làm việc với chủ đầu tư"},
+      { year: "Năm 7+", title: "Kiến trúc sư trưởng / Mở văn phòng", desc: "Xây dựng thương hiệu, nhận dự án lớn"},
+    ],
+    whyChoose: [
+      { icon: "🎨", text: "Tác phẩm của bạn tồn tại vật lý, trăm năm sau vẫn còn đó" },
+      { icon: "🏙️", text: "Bùng nổ bất động sản và đô thị hóa tạo nhu cầu khổng lồ" },
+      { icon: "✏️", text: "Ngành duy nhất kết hợp hoàn hảo nghệ thuật, kỹ thuật và khoa học" },
+      { icon: "🌿", text: "Kiến trúc xanh, bền vững — xu hướng của tương lai" },
+    ],
+    companies: ["Gensler", "Stacked Architecture", "Vo Trong Nghia Architects", "các CĐT lớn", "tự mở studio"],
+    funFact: "Kiến trúc sư Võ Trọng Nghĩa người Việt đã thiết kế các công trình đoạt giải thế giới tại 30+ quốc gia.",
+  },
+  "education": {
+    emoji: "📚", tagline: "Bạn không dạy môn học — bạn thay đổi cuộc đời người khác",
+    highlight: "EdTech VN tăng trưởng 300% sau 2020 — cơ hội kỷ lục",
+    salaryRange: "8 – 40 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Giáo viên", desc: "Giảng dạy, xây dựng giáo án, mentoring HS"},
+      { year: "Năm 3–7", title: "Tổ trưởng / Chuyên viên GD", desc: "Quản lý chương trình, đào tạo GV mới" },
+      { year: "Năm 7+", title: "Hiệu trưởng / Giám đốc học thuật", desc: "Xây dựng chiến lược giáo dục tổ chức" },
+    ],
+    whyChoose: [
+      { icon: "💡", text: "Tác động nhân rộng: 1 giáo viên giỏi ảnh hưởng hàng nghìn học sinh" },
+      { icon: "📱", text: "EdTech đang bùng nổ — cơ hội xây kênh dạy học online thu nhập lớn" },
+      { icon: "🎓", text: "Ngành duy nhất mà kiến thức và kỹ năng luôn không bao giờ lỗi thời" },
+      { icon: "🌅", text: "Môi trường làm việc ý nghĩa, ổn định và được xã hội trân trọng" },
+    ],
+    companies: ["IvyPrep", "APAX English", "British Council", "VUS", "Marathon", "Trường quốc tế"],
+    funFact: "Các giáo viên dạy online trên các nền tảng như Superprof, Preply hay tự xây kênh YouTube có thể kiếm 30–100 triệu/tháng.",
+  },
+  "law": {
+    emoji: "⚖️", tagline: "Người bảo vệ công lý, giữ vững nền tảng xã hội văn minh",
+    highlight: "Hội nhập quốc tế → nhu cầu Luật sư tăng gấp đôi thập kỷ tới",
+    salaryRange: "12 – 100 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Tập sự Luật sư / Chuyên viên pháp lý", desc: "Nghiên cứu hồ sơ, soạn thảo văn bản pháp lý" },
+      { year: "Năm 3–7", title: "Luật sư", desc: "Tranh tụng, tư vấn pháp lý cho doanh nghiệp"},
+      { year: "Năm 7+", title: "Luật sư thành viên / Trưởng văn phòng", desc: "Mở VP luật, xây dựng danh tiếng"},
+    ],
+    whyChoose: [
+      { icon: "🏛️", text: "Hội nhập WTO, EVFTA → doanh nghiệp cần luật sư quốc tế" },
+      { icon: "🛡️", text: "Nghề bảo vệ quyền và lợi ích hợp pháp của con người" },
+      { icon: "🌐", text: "Kết hợp chuyên môn phụ (IT, Y, Tài chính) → chuyên gia đầu ngành" },
+      { icon: "📜", text: "Danh tiếng và uy tín tích lũy theo thời gian — càng lâu càng giá trị" },
+    ],
+    companies: ["VILAF", "Tilleke & Gibbins", "Allen & Overy", "Baker McKenzie", "Hãng luật tư nhân"],
+    funFact: "Luật sư Việt Nam thành thạo tiếng Anh và luật quốc tế đang được săn đón bởi các công ty đa quốc gia với mức lương $3,000–$10,000/tháng.",
+  },
+  "finance": {
+    emoji: "💹", tagline: "Làm cho tiền sinh ra tiền — người chơi chiến lược thực sự",
+    highlight: "Thị trường chứng khoán VN tăng 500% — ngành tài chính bùng nổ",
+    salaryRange: "15 – 100 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Chuyên viên phân tích", desc: "Nghiên cứu thị trường, lập báo cáo đầu tư" },
+      { year: "Năm 3–6", title: "Portfolio Manager", desc: "Quản lý danh mục đầu tư, ra quyết định"},
+      { year: "Năm 6+", title: "Fund Manager / CFO", desc: "Quản lý quỹ hàng trăm tỷ, chiến lược tài chính" },
+    ],
+    whyChoose: [
+      { icon: "💎", text: "Chứng chỉ CFA được công nhận toàn cầu — passport vào Wall Street" },
+      { icon: "📈", text: "Thu nhập không trần — bonus có thể gấp 10–20 lần lương cơ bản" },
+      { icon: "🔍", text: "Hiểu tài chính giúp bạn đầu tư thông minh hơn cho bản thân" },
+      { icon: "🌏", text: "Singapore, Hong Kong cần chuyên gia tài chính VN với mức lương top" },
+    ],
+    companies: ["SSI", "VCSC", "VinaCapital", "Dragon Capital", "MB", "Techcombank Securities"],
+    funFact: "Một Fund Manager giỏi tại VN có thể quản lý danh mục 500–1,000 tỷ VND và hưởng phí quản lý hàng chục tỷ mỗi năm.",
+  },
+  "engineering": {
+    emoji: "⚙️", tagline: "Bàn tay kỹ sư tạo ra thứ nuôi sống cả nền công nghiệp",
+    highlight: "Công nghiệp hóa mạnh mẽ — kỹ sư cơ điện thiếu hụt 100,000 người",
+    salaryRange: "12 – 55 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Kỹ sư thiết kế / vận hành", desc: "Thiết kế chi tiết, giám sát sản xuất"},
+      { year: "Năm 3–7", title: "Kỹ sư trưởng", desc: "Chủ trì dự án, tối ưu hóa quy trình" },
+      { year: "Năm 7+", title: "Trưởng bộ phận kỹ thuật / Giám đốc nhà máy", desc: "Vận hành toàn nhà máy" },
+    ],
+    whyChoose: [
+      { icon: "🏭", text: "Samsung, LG, Intel đang đổ hàng tỷ USD vào VN — cần kỹ sư gấp" },
+      { icon: "🤖", text: "Automation & Robotics — kỹ sư giỏi lập trình robot, không bị robot thay thế" },
+      { icon: "⚡", text: "Năng lượng tái tạo bùng nổ — kỹ sư điện là vàng hiện nay" },
+      { icon: "🌍", text: "Kinh nghiệm nhà máy VN + tiếng Anh → cơ hội làm việc ở nước ngoài" },
+    ],
+    companies: ["Samsung Vietnam", "Intel Products Vietnam", "Bosch", "Siemens", "các KCN lớn"],
+    funFact: "Samsung Vietnam đang tuyển hàng nghìn kỹ sư mỗi năm với mức lương cạnh tranh và chế độ đãi ngộ quốc tế.",
+  },
+  "medicine": {
+    emoji: "🩺", tagline: "Nghề cao quý nhất nhân loại — cứu người là thiên chức",
+    highlight: "Bác sĩ thiếu hụt nghiêm trọng — VN chỉ có 9 BS/10,000 dân",
+    salaryRange: "15 – 150 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–5", title: "Bác sĩ nội trú / Thực tập", desc: "Học lâm sàng, thực hành dưới giám sát" },
+      { year: "Năm 5–10", title: "Bác sĩ chuyên khoa", desc: "Khám và điều trị độc lập, nghiên cứu" },
+      { year: "Năm 10+", title: "GS.TS / Trưởng khoa / Mở phòng khám", desc: "Đỉnh cao y học, thu nhập không giới hạn" },
+    ],
+    whyChoose: [
+      { icon: "❤️", text: "Mỗi bệnh nhân phục hồi là thành tựu không tiền bạc nào sánh được" },
+      { icon: "🔬", text: "Y học kết hợp AI đang cách mạng hóa chẩn đoán và điều trị" },
+      { icon: "💎", text: "Bác sĩ giỏi không bao giờ thiếu việc — dù ở bất kỳ đâu trên thế giới" },
+      { icon: "🌟", text: "Địa vị xã hội cao, được cộng đồng tin tưởng và tôn trọng" },
+    ],
+    companies: ["BV Bạch Mai", "Vinmec", "BV Chợ Rẫy", "BV Quân Y", "Phòng khám tư nhân"],
+    funFact: "Bác sĩ Việt Nam làm việc tại Mỹ, Úc, Canada có thể kiếm $200,000–$400,000/năm. Hành trình dài nhưng phần thưởng xứng đáng.",
+  },
+  "social-work": {
+    emoji: "🤝", tagline: "Thay đổi xã hội bắt đầu từ từng cá nhân bạn giúp đỡ",
+    highlight: "Phúc lợi xã hội VN đang được đầu tư mạnh mẽ 2025–2030",
+    salaryRange: "8 – 30 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Nhân viên CTXH", desc: "Làm việc trực tiếp với đối tượng cần hỗ trợ" },
+      { year: "Năm 3–6", title: "Chuyên viên / Quản lý ca", desc: "Điều phối mạng lưới hỗ trợ, theo dõi tiến độ" },
+      { year: "Năm 6+", title: "Giám đốc chương trình / Cố vấn chính sách", desc: "Thiết kế chính sách xã hội cấp quốc gia"},
+    ],
+    whyChoose: [
+      { icon: "🌱", text: "Công việc có ý nghĩa sâu sắc — thay đổi được cuộc sống người thực" },
+      { icon: "🌍", text: "UN, UNICEF, WHO đang mở rộng ở VN — cơ hội làm việc tổ chức quốc tế" },
+      { icon: "📊", text: "Kết hợp data + tâm lý xã hội = profile cực kỳ giá trị với NGO" },
+      { icon: "💙", text: "Phát triển EQ và kỹ năng sống mà không ngành nào dạy được" },
+    ],
+    companies: ["UNICEF", "WHO", "Save the Children", "ActionAid", "Sở LĐTB&XH", "NGO địa phương"],
+    funFact: "Chuyên gia CTXH làm việc cho các tổ chức quốc tế như UN tại VN có mức lương từ $2,000–$5,000/tháng và phụ cấp hấp dẫn.",
+  },
+  "economics": {
+    emoji: "🌐", tagline: "Người đọc được ngôn ngữ của nền kinh tế toàn cầu",
+    highlight: "Kinh tế VN tăng trưởng top 5 châu Á — nhu cầu chuyên gia bùng nổ",
+    salaryRange: "12 – 70 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Chuyên viên nghiên cứu", desc: "Thu thập dữ liệu, phân tích báo cáo kinh tế"},
+      { year: "Năm 3–6", title: "Chuyên gia kinh tế", desc: "Tư vấn chính sách, nghiên cứu độc lập" },
+      { year: "Năm 6+", title: "Kinh tế trưởng / Cố vấn Chính phủ", desc: "Định hướng chính sách kinh tế quốc gia" },
+    ],
+    whyChoose: [
+      { icon: "📊", text: "Nền tảng để chuyển sang Tài chính, Ngân hàng, Tư vấn chiến lược" },
+      { icon: "🎓", text: "Học bổng Fulbright, Chevening ưu tiên sinh viên Kinh tế VN" },
+      { icon: "🌏", text: "IMF, World Bank, ADB đang mở rộng hoạt động tại VN" },
+      { icon: "🔮", text: "Hiểu kinh tế = hiểu cách thế giới vận hành, đầu tư thông minh hơn" },
+    ],
+    companies: ["VEPR", "CIEM", "Ngân hàng Thế giới", "ADB", "Bộ Kế hoạch & Đầu tư", "các tập đoàn lớn"],
+    funFact: "Tiến sĩ Kinh tế từ trường top VN được IMF và World Bank tuyển dụng với mức lương $80,000–$150,000/năm tại Washington D.C.",
+  },
+  "chemical-engineering": {
+    emoji: "🧪", tagline: "Biến đổi vật chất, kiến tạo tương lai bền vững",
+    highlight: "Cốt lõi của ngành công nghiệp FMCG, Dược phẩm và Năng lượng",
+    salaryRange: "12 – 50 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Kỹ sư R&D / Kỹ sư QC", desc: "Nghiên cứu công thức, kiểm soát chất lượng" },
+      { year: "Năm 3–6", title: "Quản lý Sản xuất", desc: "Vận hành dây chuyền, tối ưu hóa quy trình" },
+      { year: "Năm 6+", title: "Giám đốc Nhà máy / Trưởng R&D", desc: "Định hướng phát triển sản phẩm mới" },
+    ],
+    whyChoose: [
+      { icon: "🏭", text: "Đóng vai trò chủ chốt trong ngành mỹ phẩm, thực phẩm, thuốc men" },
+      { icon: "🔋", text: "Xu hướng năng lượng sạch (Pin xe điện) đang khát nhân lực" },
+      { icon: "💡", text: "Tính ứng dụng thực tế cực cao, có thể tự khởi nghiệp làm sản phẩm riêng" },
+      { icon: "🌍", text: "Cơ hội làm việc tại các tập đoàn đa quốc gia với lộ trình rõ ràng" },
+    ],
+    companies: ["Unilever", "Suntory PepsiCo", "Nestlé", "Dược Hậu Giang", "Petrolimex"],
+    funFact: "Kỹ sư Hóa học đứng sau công thức của mọi thứ bạn dùng hàng ngày: từ kem đánh răng, nước hoa đến pin điện thoại!",
+  },
+  "mathematics": {
+    emoji: "📈", tagline: "Giải mã thế giới bằng sức mạnh của những con số",
+    highlight: "Nền tảng cốt lõi của Cách mạng AI và Khoa học dữ liệu",
+    salaryRange: "15 – 80 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–3", title: "Data Analyst / Actuary Trainee", desc: "Phân tích dữ liệu, tính toán rủi ro"},
+      { year: "Năm 3–6", title: "Data Scientist / Senior Quant", desc: "Xây dựng mô hình máy học, dự báo kinh tế" },
+      { year: "Năm 6+", title: "AI Engineer / Head of Data", desc: "Lãnh đạo bộ phận dữ liệu, xây dựng hệ thống AI" },
+    ],
+    whyChoose: [
+      { icon: "🔮", text: "Data Science được mệnh danh là 'Nghề quyến rũ nhất thế kỷ 21'" },
+      { icon: "🧠", text: "Tư duy toán học giúp chuyển đổi sang IT hoặc Tài chính cực kỳ dễ dàng" },
+      { icon: "🚀", text: "Nhu cầu nhân lực AI tăng đột biến, không lo thất nghiệp" },
+      { icon: "🌍", text: "Ngôn ngữ của Toán là toàn cầu, dễ dàng làm việc remote xuyên quốc gia" },
+    ],
+    companies: ["FPT.AI", "VNG", "Momo", "Techcombank", "KPMG", "Các quỹ đầu tư"],
+    funFact: "Nhiều tỷ phú công nghệ và nhà quản lý quỹ phòng hộ (Hedge Fund) vĩ đại nhất thế giới xuất thân từ cử nhân Toán học, không phải ngành Kinh doanh.",
+  },
+  "communication": {
+    emoji: "🎙️", tagline: "Nghệ thuật của ngôn từ và sự kết nối đại chúng",
+    highlight: "Ngành học không bao giờ lỗi thời trong kỷ nguyên số",
+    salaryRange: "10 – 60 triệu/tháng",
+    careerPath: [
+      { year: "Năm 1–2", title: "PR / Content Executive", desc: "Sáng tạo nội dung, hỗ trợ tổ chức sự kiện"},
+      { year: "Năm 3–5", title: "PR Manager / Creative Planner", desc: "Lên chiến lược truyền thông, xử lý khủng hoảng" },
+      { year: "Năm 5+", title: "Communications Director", desc: "Quản trị danh tiếng thương hiệu toàn tổ chức" },
+    ],
+    whyChoose: [
+      { icon: "🔥", text: "Môi trường năng động, luôn cập nhật những xu hướng mới nhất" },
+      { icon: "🤝", text: "Xây dựng được mạng lưới quan hệ (network) siêu khủng" },
+      { icon: "✨", text: "Cơ hội làm việc với người nổi tiếng, KOLs và giới báo chí" },
+      { icon: "💻", text: "Tính linh hoạt cao, có thể dễ dàng làm Freelancer tự do" },
+    ],
+    companies: ["Ogilvy", "Dentsu", "VTV", "Đất Việt VAC", "Cát Tiên Sa", "Vingroup"],
+    funFact: "Một chuyên gia PR giỏi có thể xoay chuyển tình thế khủng hoảng truyền thông trị giá hàng triệu USD của một tập đoàn chỉ bằng một bài phát biểu.",
+  }
+};
+
+export const DEFAULT_ENRICHMENT = {
+  emoji: "🎓", tagline: "Khám phá tiềm năng của bản thân trong ngành học này",
+  highlight: "Ngành nghề đầy tiềm năng phát triển",
+  salaryRange: "Phụ thuộc chuyên môn",
+  careerPath: [
+    { year: "Năm 1–3", title: "Nhân viên", desc: "Học nghề, xây dựng nền tảng", salary: "10–18tr" },
+    { year: "Năm 3–6", title: "Chuyên viên", desc: "Làm độc lập, dẫn dắt dự án nhỏ", salary: "20–35tr" },
+    { year: "Năm 6+", title: "Quản lý / Chuyên gia", desc: "Dẫn dắt team, định hướng chiến lược", salary: "40tr+" },
+  ],
+  whyChoose: [
+    { icon: "🌱", text: "Nhiều cơ hội phát triển và học hỏi" },
+    { icon: "💪", text: "Phù hợp với thế mạnh và đam mê của bạn" },
+    { icon: "🌐", text: "Kết nối với cộng đồng chuyên nghiệp rộng lớn" },
+    { icon: "🎯", text: "Lộ trình thăng tiến rõ ràng, có thể đo lường" },
+  ],
+  companies: ["Các doanh nghiệp hàng đầu trong ngành"],
+  funFact: "Sự thành công trong bất kỳ ngành nào đều đến từ đam mê kết hợp với kỹ năng không ngừng phát triển.",
+};

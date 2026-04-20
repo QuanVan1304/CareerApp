@@ -121,7 +121,7 @@ def generate_insight(req: InsightRequest):
     if not req.isFinal:
         # Nhận xét giữa giờ: Nhắc đến Ngành do AI dự đoán
         insight = f"Qua {req.answeredCount} câu đầu tiên, bạn đang thể hiện thiên hướng mạnh về mảng {trait_names.get(top1_code, '')}. "
-        insight += f"Dựa trên dữ liệu sơ bộ này, AI nhận thấy bạn rất có tiềm năng với các nhóm ngành như **{majors_text}**. "
+        insight += f"Dựa trên dữ liệu sơ bộ này, AI nhận thấy bạn rất có tiềm năng với các nhóm ngành như {majors_text}. "
         
         if req.bigFive:
             if req.bigFive.Openness >= 5.0:
@@ -140,7 +140,7 @@ def generate_insight(req: InsightRequest):
         else:
             insight = f"Bạn sở hữu sự pha trộn thú vị giữa {trait_names.get(top1_code, '')} và {trait_names.get(top2_code, '')}. "
 
-        insight += f"Mô hình AI nhận định **{majors_text}** chính là sân khấu lý tưởng nhất dành cho bạn. "
+        insight += f"Mô hình AI nhận định {majors_text} chính là sân khấu lý tưởng nhất dành cho bạn. "
 
         if req.bigFive:
             if req.bigFive.Extraversion >= 5.5:
