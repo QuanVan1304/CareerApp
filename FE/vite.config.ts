@@ -57,5 +57,6 @@
     server: {
       port: 3000,
       open: true,
+      allowedHosts: true,
     },
   });

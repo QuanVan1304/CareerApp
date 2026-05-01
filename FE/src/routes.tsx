@@ -3,7 +3,7 @@ import { LandingPage } from "./components/LandingPage";
 import { SurveyPage } from "./components/SurveyPage";
 import { DashboardPage } from "./components/DashboardPage";
 import { JobDetailPage } from "./components/JobDetailPage";
-
+import { SpecificJobPage } from "./components/SpecificJobPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -20,5 +20,9 @@ export const router = createBrowserRouter([
   {
     path: "/job/:jobId",
     Component: JobDetailPage,
+  },
+  {
+    path: "/job/:jobId/role/:roleId",
+    Component: SpecificJobPage,
   },
 ]);

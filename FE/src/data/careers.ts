@@ -1,3 +1,9 @@
+export interface SpecificJob {
+  id: string
+  title: string;       // Tên công việc cụ thể
+  description: string; // Mô tả ngắn công việc
+}
+
 export interface Career {
   id: string;
   majorName: string; // TÊN NGÀNH TIẾNG ANH (Cực kỳ quan trọng để khớp với AI)
@@ -11,6 +17,7 @@ export interface Career {
   // salaryRange: string;
   jobOutlook: string;
   universityMajors: string[];
+  specificJobs: SpecificJob[]; // Các công việc cụ thể sau khi tốt nghiệp
   roadmap: RoadmapPhase[];
 }
 
@@ -28,22 +35,54 @@ export interface Course {
   platform: string;
   url: string;
 }
+export interface TechStackItem {
+  name: string;
+  icon: React.ReactNode;
+  color: string;
+}
 
+export interface FunFactItem {
+  title: string;
+  description: string;
+}
+
+export interface ProgressionItem {
+  level: string;
+  exp: string;
+  role: string;
+}
+
+export interface SpecificJobDetail {
+  title: string;
+  parentMajor: string;
+  description: string;
+  stats: {
+    salary: string;
+    growth: string;
+    environment: string;
+  };
+  techStack: TechStackItem[];
+  funFacts: FunFactItem[];
+  progression: ProgressionItem[];
+  actionPlan: {
+    projects: string[];
+    interviewPrep: string;
+  };
+}
 const tipiOptions = [
-  { text: "Hoàn toàn đồng ý (Agree strongly)", score: 7 },
-  { text: "Tương đối đồng ý (Agree moderately)", score: 6 },
-  { text: "Hơi đồng ý (Agree a little)", score: 5 },
-  { text: "Trung lập (Neither agree nor disagree)", score: 4 },
-  { text: "Hơi không đồng ý (Disagree a little)", score: 3 },
-  { text: "Tương đối không đồng ý (Disagree moderately)", score: 2 },
-  { text: "Hoàn toàn không đồng ý (Disagree strongly)", score: 1 },
+  { text: "Hoàn toàn đồng ý", score: 7 },
+  { text: "Tương đối đồng ý", score: 6 },
+  { text: "Hơi đồng ý", score: 5 },
+  { text: "Trung lập", score: 4 },
+  { text: "Hơi không đồng ý", score: 3 },
+  { text: "Tương đối không đồng ý", score: 2 },
+  { text: "Hoàn toàn không đồng ý", score: 1 },
 ];
-
 // ─── DANH SÁCH NGÀNH NGHỀ & LỘ TRÌNH ──────────────────────────────────────────
 export const careers: Career[] = [
   {
     id: "computer-science",
-    majorName: "computer science", // Phải khớp với data.csv
+    majorName: "computer science",
     name: "Khoa Học Máy Tính / Kỹ Sư Phần Mềm",
     description: "Nghiên cứu về hệ thống máy tính, thuật toán và phát triển phần mềm. Đây là ngành dành cho những người có tư duy logic cao, thích giải quyết vấn đề và đam mê công nghệ.",
     matchingScore: 0,
@@ -51,11 +90,15 @@ export const careers: Career[] = [
     requiredSkills: { "Logic": 9, "Toán": 8, "Lập trình": 8, "Phân tích": 9 },
     jobOutlook: "Nhu cầu nhân lực cực kỳ lớn",
     universityMajors: ["Khoa học máy tính", "Kỹ thuật phần mềm", "Trí tuệ nhân tạo"],
+    specificJobs: [
+      { id: "sw-engineer", title: "Kỹ sư phần mềm (Software Engineer)", description: "Thiết kế, phát triển và bảo trì các ứng dụng web, mobile hoặc hệ thống backend." },
+      { id: "ai-ml", title: "Kỹ sư AI / Machine Learning", description: "Xây dựng mô hình học máy, xử lý dữ liệu lớn và triển khai hệ thống AI vào sản phẩm." },
+      { id: "devops", title: "Kỹ sư DevOps / Cloud", description: "Quản lý hạ tầng đám mây (AWS, GCP), tự động hóa CI/CD pipeline và đảm bảo hệ thống hoạt động ổn định." },
+      { id: "infosec", title: "Chuyên gia An toàn thông tin", description: "Kiểm tra bảo mật, phát hiện lỗ hổng và xây dựng hệ thống phòng thủ cho doanh nghiệp." },
+      { id: "data-engineer", title: "Kỹ sư dữ liệu (Data Engineer)", description: "Xây dựng pipeline dữ liệu, quản lý data warehouse phục vụ phân tích và AI." },
+    ],
     roadmap: [
-      {
-        id: "p1", title: "Nền tảng CS", description: "Học tư duy lập trình và cấu trúc dữ liệu", duration: "6 tháng",
-        courses: [{ id: "c1", title: "CS50: Introduction to Computer Science", platform: "edX", url: "https://cs50.harvard.edu/" }]
-      }
+      { id: "p1", title: "Nền tảng CS", description: "Học tư duy lập trình và cấu trúc dữ liệu", duration: "6 tháng", courses: [{ id: "c1", title: "CS50: Introduction to Computer Science", platform: "edX", url: "https://cs50.harvard.edu/" }] }
     ]
   },
   {
@@ -68,11 +111,15 @@ export const careers: Career[] = [
     requiredSkills: { "Giao tiếp": 9, "Thấu cảm": 10, "Phân tích": 8, "Lắng nghe": 9 },
     jobOutlook: "Đang phát triển mạnh tại VN",
     universityMajors: ["Tâm lý học", "Tham vấn tâm lý", "Tâm lý học lâm sàng"],
+    specificJobs: [
+      { id: "psychological-counselor", title: "Chuyên viên tham vấn tâm lý", description: "Lắng nghe, đánh giá và hỗ trợ cá nhân vượt qua lo âu, trầm cảm và các vấn đề tâm lý." },
+      { id: "hr-specialist", title: "Chuyên viên nhân sự (HR)", description: "Ứng dụng tâm lý học vào tuyển dụng, đào tạo và xây dựng văn hóa doanh nghiệp." },
+      { id: "psychotherapist", title: "Nhà trị liệu tâm lý", description: "Thực hiện các liệu pháp trị liệu (CBT, DBT...) cho bệnh nhân tại bệnh viện hoặc phòng khám tư." },
+      { id: "behavioral-researcher", title: "Chuyên viên nghiên cứu hành vi", description: "Thu thập và phân tích dữ liệu hành vi người dùng cho doanh nghiệp hoặc tổ chức nghiên cứu." },
+      { id: "school-psychologist", title: "Giáo viên / Chuyên viên tâm lý học đường", description: "Hỗ trợ sức khỏe tinh thần học sinh tại các trường học." },
+    ],
     roadmap: [
-      {
-        id: "p1", title: "Đại cương Tâm lý", description: "Các học thuyết tâm lý học nền tảng", duration: "1 năm",
-        courses: [{ id: "c1", title: "Introduction to Psychology", platform: "Coursera", url: "https://www.coursera.org/learn/introduction-psychology" }]
-      }
+      { id: "p1", title: "Đại cương Tâm lý", description: "Các học thuyết tâm lý học nền tảng", duration: "1 năm", courses: [{ id: "c1", title: "Introduction to Psychology", platform: "Coursera", url: "https://www.coursera.org/learn/introduction-psychology" }] }
     ]
   },
   {
@@ -85,7 +132,17 @@ export const careers: Career[] = [
     requiredSkills: { "Lãnh đạo": 9, "Giao tiếp": 9, "Tư duy chiến lược": 8, "Quản lý thời gian": 8 },
     jobOutlook: "Cơ hội thăng tiến cao",
     universityMajors: ["Quản trị kinh doanh", "Kinh tế quốc tế", "Thương mại"],
-    roadmap: []
+    specificJobs: [
+      { id: "ceo-coo", title: "Quản lý / Giám đốc điều hành (CEO/COO)", description: "Lãnh đạo và điều phối toàn bộ hoạt động kinh doanh của doanh nghiệp." },
+      { id: "bdm", title: "Chuyên viên phát triển kinh doanh (BDM)", description: "Tìm kiếm khách hàng, đối tác và mở rộng thị trường cho công ty." },
+      { id: "management-consultant", title: "Chuyên viên tư vấn quản lý (Consultant)", description: "Phân tích vấn đề và đề xuất giải pháp cải thiện hoạt động cho doanh nghiệp." },
+      { id: "operations-specialist", title: "Chuyên viên vận hành (Operations)", description: "Tối ưu hóa quy trình nội bộ, quản lý chuỗi cung ứng và hiệu quả sản xuất." },
+      { id: "startup-founder", title: "Chủ doanh nghiệp / Startup Founder", description: "Tự khởi nghiệp, xây dựng sản phẩm/dịch vụ và điều hành công ty riêng." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Nền tảng Kinh doanh & Lãnh đạo", description: "Hiểu tổng quan về cách một doanh nghiệp vận hành, từ nhân sự, vận hành đến các nguyên tắc lãnh đạo cơ bản.", duration: "3-4 tháng", courses: [{ id: "c1", title: "Business Foundations", platform: "Coursera (Wharton)", url: "https://www.coursera.org/specializations/wharton-business-foundations" }, { id: "c2", title: "Kỹ năng Lãnh đạo & Quản lý", platform: "YouTube", url: "https://www.youtube.com/results?search_query=k%E1%BB%B9+n%C4%83ng+l%C3%A3nh+%C4%91%E1%BA%A1o+v%C3%A0+qu%E1%BA%A3n+l%C3%BD" }] },
+      { id: "p2", title: "Tư duy Chiến lược & Đàm phán", description: "Học cách xây dựng chiến lược cạnh tranh và nghệ thuật giao tiếp, đàm phán trong môi trường kinh doanh B2B/B2C.", duration: "3-5 tháng", courses: [{ id: "c3", title: "Strategic Leadership and Management", platform: "Coursera (UIUC)", url: "https://www.coursera.org/specializations/strategic-leadership" }, { id: "c4", title: "Nghệ thuật Đàm phán Kinh doanh", platform: "YouTube", url: "https://www.youtube.com/results?search_query=ngh%E1%BB%87+thu%E1%BA%ADt+%C4%91%C3%A0m+ph%C3%A1n+kinh+doanh" }] }
+    ]
   },
   {
     id: "marketing",
@@ -97,7 +154,17 @@ export const careers: Career[] = [
     requiredSkills: { "Sáng tạo": 9, "Phân tích xu hướng": 8, "Viết lách": 8, "Giao tiếp": 9 },
     jobOutlook: "Luôn khát nhân sự",
     universityMajors: ["Marketing", "Truyền thông đa phương tiện", "Quan hệ công chúng (PR)"],
-    roadmap: []
+    specificJobs: [
+      { id: "content-creator", title: "Content Creator / Copywriter", description: "Sáng tạo nội dung hấp dẫn cho mạng xã hội, website và các chiến dịch quảng cáo." },
+      { id: "digital-marketer", title: "Digital Marketing Specialist", description: "Lên kế hoạch và chạy các chiến dịch quảng cáo trực tuyến (Google Ads, Facebook Ads, TikTok Ads)." },
+      { id: "brand-manager", title: "Brand Manager", description: "Quản lý hình ảnh và định vị thương hiệu trên thị trường." },
+      { id: "pr-specialist", title: "Chuyên viên PR & Truyền thông", description: "Xây dựng mối quan hệ báo chí, xử lý khủng hoảng truyền thông và tổ chức sự kiện." },
+      { id: "market-researcher", title: "Market Research Analyst", description: "Nghiên cứu xu hướng thị trường, phân tích đối thủ cạnh tranh và hành vi người tiêu dùng." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Nền tảng Marketing & Tâm lý Tiêu dùng", description: "Nắm vững các khái niệm cốt lõi của Marketing, hành trình khách hàng và tâm lý học đằng sau các quyết định mua sắm.", duration: "2-4 tháng", courses: [{ id: "c1", title: "Fundamentals of Digital Marketing", platform: "Google Digital Garage", url: "https://skillshop.exceedlms.com/student/collection/654330-digital-marketing" }, { id: "c2", title: "Consumer Behavior / Tâm lý người tiêu dùng", platform: "YouTube", url: "https://www.youtube.com/results?search_query=consumer+behavior+marketing" }] },
+      { id: "p2", title: "Thực chiến Content, SEO & Social Media", description: "Học cách viết nội dung thu hút, tối ưu hóa công cụ tìm kiếm và chạy các chiến dịch trên mạng xã hội.", duration: "3-6 tháng", courses: [{ id: "c3", title: "Inbound Marketing Certification", platform: "HubSpot Academy", url: "https://academy.hubspot.com/courses/inbound" }, { id: "c4", title: "Thực hành SEO & Content Marketing", platform: "YouTube", url: "https://www.youtube.com/results?search_query=h%C6%B0%E1%BB%9Bng+d%E1%BA%ABn+seo+t%E1%BB%AB+c%C6%A1+b%E1%BA%A3n" }] }
+    ]
   },
   {
     id: "nursing",
@@ -109,7 +176,17 @@ export const careers: Career[] = [
     requiredSkills: { "Cẩn thận": 10, "Sức khỏe": 8, "Giao tiếp": 8, "Chịu áp lực": 9 },
     jobOutlook: "Nhu cầu tuyển dụng ổn định",
     universityMajors: ["Điều dưỡng", "Y khoa", "Y tế công cộng"],
-    roadmap: []
+    specificJobs: [
+      { id: "clinical-nurse", title: "Điều dưỡng lâm sàng", description: "Chăm sóc bệnh nhân nội trú, thực hiện y lệnh và theo dõi tình trạng sức khỏe tại bệnh viện." },
+      { id: "community-nurse", title: "Điều dưỡng cộng đồng", description: "Cung cấp dịch vụ y tế và giáo dục sức khỏe cho người dân tại trạm y tế hoặc tại nhà." },
+      { id: "public-health", title: "Chuyên viên y tế công cộng", description: "Triển khai các chương trình phòng ngừa dịch bệnh và nâng cao sức khỏe cộng đồng." },
+      { id: "specialty-nurse", title: "Điều dưỡng chuyên khoa (ICU, OR, ER)", description: "Làm việc tại các khoa đặc biệt đòi hỏi kỹ năng chuyên sâu như hồi sức cấp cứu, phẫu thuật." },
+      { id: "export-nurse", title: "Điều dưỡng xuất khẩu lao động", description: "Làm việc tại các bệnh viện ở Nhật Bản, Đức, Canada với mức thu nhập cao." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Giải phẫu học & Sinh lý học cơ bản", description: "Hiểu về cấu tạo cơ thể người, các hệ cơ quan và cách chúng hoạt động (Anatomy & Physiology).", duration: "4-6 tháng", courses: [{ id: "c1", title: "Health & Medicine - Anatomy", platform: "Khan Academy", url: "https://www.khanacademy.org/science/health-and-medicine" }, { id: "c2", title: "Vital Signs: Understanding What the Body Is Telling Us", platform: "Coursera (University of Pennsylvania)", url: "https://www.coursera.org/learn/vital-signs" }] },
+      { id: "p2", title: "Kỹ năng Điều dưỡng lâm sàng & Giao tiếp Y tế", description: "Học các kỹ năng sơ cứu, chăm sóc người bệnh thực tế và thuật ngữ y khoa chuyên ngành.", duration: "3-5 tháng", courses: [{ id: "c3", title: "Clinical Terminology for International Students", platform: "Coursera", url: "https://www.coursera.org/learn/clinical-terminology" }, { id: "c4", title: "Kỹ năng Sơ cứu & Chăm sóc Điều dưỡng", platform: "YouTube", url: "https://www.youtube.com/results?search_query=nursing+skills+fundamentals" }] }
+    ]
   },
   {
     id: "accounting",
@@ -121,11 +198,21 @@ export const careers: Career[] = [
     requiredSkills: { "Làm việc với số liệu": 9, "Tỉ mỉ": 10, "Trung thực": 10, "Logic": 8 },
     jobOutlook: "Mọi công ty đều cần",
     universityMajors: ["Kế toán", "Kiểm toán", "Tài chính doanh nghiệp"],
-    roadmap: []
+    specificJobs: [
+      { id: "corporate-accountant", title: "Kế toán viên doanh nghiệp", description: "Hạch toán, lập báo cáo tài chính và kê khai thuế cho doanh nghiệp." },
+      { id: "auditor", title: "Kiểm toán viên (Big4 & Công ty kiểm toán)", description: "Kiểm tra và xác nhận tính trung thực của báo cáo tài chính doanh nghiệp." },
+      { id: "cfo", title: "Kế toán trưởng / CFO", description: "Quản lý toàn bộ hoạt động tài chính kế toán và tư vấn chiến lược tài chính." },
+      { id: "tax-consultant", title: "Chuyên viên tư vấn thuế", description: "Tư vấn tối ưu hóa nghĩa vụ thuế, lập kế hoạch thuế cho cá nhân và doanh nghiệp." },
+      { id: "internal-controller", title: "Chuyên viên kiểm soát nội bộ", description: "Thiết lập và giám sát hệ thống kiểm soát nội bộ để phòng ngừa gian lận tài chính." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Nguyên lý Kế toán & Ghi chép Sổ sách", description: "Nắm vững nguyên lý kế toán kép, các loại tài khoản và cách lập báo cáo tài chính cơ bản.", duration: "3-4 tháng", courses: [{ id: "c1", title: "Financial Accounting Fundamentals", platform: "Coursera (University of Virginia)", url: "https://www.coursera.org/learn/uva-darden-financial-accounting" }, { id: "c2", title: "Nguyên lý Kế toán (Cho người mới bắt đầu)", platform: "YouTube", url: "https://www.youtube.com/results?search_query=nguy%C3%AAn+l%C3%BD+k%E1%BA%BF+to%C3%A1n" }] },
+      { id: "p2", title: "Phần mềm Kế toán & Kiểm toán nội bộ", description: "Ứng dụng Excel nâng cao vào kế toán, tìm hiểu quy định về Thuế và nền tảng Kiểm toán.", duration: "3-6 tháng", courses: [{ id: "c3", title: "Auditing I: Conceptual Foundations", platform: "Coursera (UIUC)", url: "https://www.coursera.org/learn/auditing-part1-conceptual-foundations" }, { id: "c4", title: "Excel ứng dụng trong Kế toán", platform: "YouTube", url: "https://www.youtube.com/results?search_query=excel+cho+k%E1%BA%BF+to%C3%A1n" }] }
+    ]
   },
   {
     id: "information-technology",
-    majorName: "information technology", // Khớp với data.csv
+    majorName: "information technology",
     name: "Công Nghệ Thông Tin",
     description: "Quản lý, vận hành và bảo mật hệ thống mạng, cơ sở dữ liệu. Khác với Kỹ sư phần mềm, ngành này thiên về tư duy hệ thống, xử lý sự cố phần cứng/mạng và phù hợp với những bạn thích cấu hình thiết bị, bảo mật dữ liệu.",
     matchingScore: 0,
@@ -133,16 +220,20 @@ export const careers: Career[] = [
     requiredSkills: { "Giải quyết vấn đề": 9, "Tư duy hệ thống": 8, "Cẩn thận": 8, "Thích ứng nhanh": 9 },
     jobOutlook: "Cơ hội việc làm đa dạng ở mọi lĩnh vực",
     universityMajors: ["Công nghệ thông tin", "An toàn thông tin", "Hệ thống thông tin quản lý"],
+    specificJobs: [
+      { id: "sysadmin", title: "Quản trị hệ thống / Mạng", description: "Vận hành, cấu hình và bảo trì hệ thống máy chủ, mạng nội bộ của tổ chức." },
+      { id: "cybersecurity", title: "Chuyên gia an ninh mạng (Cybersecurity)", description: "Bảo vệ hệ thống khỏi tấn công mạng, kiểm tra thâm nhập (pentest) và ứng phó sự cố." },
+      { id: "dba", title: "Database Administrator (DBA)", description: "Quản lý, tối ưu hóa và bảo mật cơ sở dữ liệu cho doanh nghiệp." },
+      { id: "it-support", title: "IT Support / Helpdesk", description: "Hỗ trợ kỹ thuật người dùng, xử lý sự cố phần cứng và phần mềm." },
+      { id: "cloud-architect", title: "Cloud Solutions Architect", description: "Thiết kế và triển khai kiến trúc hệ thống trên nền tảng đám mây (AWS, Azure, GCP)." },
+    ],
     roadmap: [
-      {
-        id: "p1", title: "Căn bản về IT & Mạng", description: "Hiểu về cách máy tính giao tiếp và hoạt động cơ bản", duration: "3 tháng",
-        courses: [{ id: "c1", title: "Google IT Support Professional Certificate", platform: "Coursera", url: "https://www.coursera.org/professional-certificates/google-it-support" }]
-      }
+      { id: "p1", title: "Căn bản về IT & Mạng", description: "Hiểu về cách máy tính giao tiếp và hoạt động cơ bản", duration: "3 tháng", courses: [{ id: "c1", title: "Google IT Support Professional Certificate", platform: "Coursera", url: "https://www.coursera.org/professional-certificates/google-it-support" }] }
     ]
   },
   {
     id: "chemical-engineering",
-    majorName: "chemical engineering", // Khớp với file data.csv
+    majorName: "chemical engineering",
     name: "Kỹ Thuật Hóa Học / Kỹ Sư Hóa",
     description: "Ứng dụng kiến thức Hóa, Lý và Toán để biến các nguyên liệu thô thành những sản phẩm thiết yếu hàng ngày (mỹ phẩm, thực phẩm, thuốc, năng lượng). Rất phù hợp với những bạn yêu thích khoa học tự nhiên, đam mê làm thí nghiệm (nhóm Investigative) và thích thực hành chế tạo (nhóm Realistic).",
     matchingScore: 0,
@@ -150,27 +241,15 @@ export const careers: Career[] = [
     requiredSkills: { "Hóa học": 10, "Tư duy logic": 8, "Cẩn thận tỉ mỉ": 9, "Thực hành tay chân": 8 },
     jobOutlook: "Nhu cầu cao, thu nhập tốt trong các tập đoàn sản xuất, FMCG",
     universityMajors: ["Kỹ thuật hóa học", "Công nghệ kỹ thuật hóa học", "Hóa dược", "Công nghệ thực phẩm"],
+    specificJobs: [
+      { id: "rnd-engineer", title: "Kỹ sư nghiên cứu & Phát triển (R&D)", description: "Nghiên cứu công thức, cải tiến sản phẩm mới trong ngành mỹ phẩm, thực phẩm, dược phẩm." },
+      { id: "qc-engineer", title: "Kỹ sư kiểm soát chất lượng (QC/QA)", description: "Kiểm tra, đảm bảo chất lượng nguyên liệu và thành phẩm đạt tiêu chuẩn quy định." },
+      { id: "process-engineer", title: "Kỹ sư vận hành dây chuyền sản xuất", description: "Giám sát và tối ưu hóa quy trình sản xuất hóa chất, thực phẩm, dầu khí." },
+      { id: "hse-specialist", title: "Chuyên viên an toàn môi trường (HSE)", description: "Đảm bảo hoạt động nhà máy tuân thủ tiêu chuẩn an toàn và bảo vệ môi trường." },
+      { id: "renewable-energy", title: "Kỹ sư năng lượng tái tạo", description: "Nghiên cứu ứng dụng vật liệu hóa học cho pin năng lượng mặt trời, nhiên liệu sinh học." },
+    ],
     roadmap: [
-      {
-        id: "p1", 
-        title: "Nền tảng Hóa học & Khám phá Kỹ thuật", 
-        description: "Ôn tập kiến thức Hóa học cốt lõi và tìm hiểu cách các nhà máy vận hành quy trình sản xuất.", 
-        duration: "3-6 tháng",
-        courses: [
-          { 
-            id: "c1", 
-            title: "College Chemistry (Hóa học Đại cương)", 
-            platform: "Khan Academy", 
-            url: "https://www.khanacademy.org/science/chemistry" 
-          },
-          { 
-            id: "c2", 
-            title: "Introduction to Chemical Engineering", 
-            platform: "Coursera", 
-            url: "https://www.coursera.org/learn/materials-science" // Khóa học đại cương về khoa học vật liệu/kỹ thuật
-          }
-        ]
-      }
+      { id: "p1", title: "Nền tảng Hóa học & Khám phá Kỹ thuật", description: "Ôn tập kiến thức Hóa học cốt lõi và tìm hiểu cách các nhà máy vận hành quy trình sản xuất.", duration: "3-6 tháng", courses: [{ id: "c1", title: "College Chemistry (Hóa học Đại cương)", platform: "Khan Academy", url: "https://www.khanacademy.org/science/chemistry" }, { id: "c2", title: "Introduction to Chemical Engineering", platform: "Coursera", url: "https://www.coursera.org/learn/materials-science" }] }
     ]
   },
   {
@@ -183,7 +262,17 @@ export const careers: Career[] = [
     requiredSkills: { "Sáng tạo": 10, "Thẩm mỹ": 9, "Chịu áp lực": 8, "Chi tiết": 8 },
     jobOutlook: "Nhu cầu ổn định trong ngành xây dựng",
     universityMajors: ["Kiến trúc", "Thiết kế nội thất", "Quy hoạch đô thị"],
-    roadmap: []
+    specificJobs: [
+      { id: "design-architect", title: "Kiến trúc sư thiết kế", description: "Lên ý tưởng và thiết kế công trình nhà ở, thương mại, văn phòng theo yêu cầu chủ đầu tư." },
+      { id: "interior-architect", title: "Kiến trúc sư nội thất", description: "Thiết kế không gian nội thất đẹp, công năng và phù hợp phong cách của gia chủ." },
+      { id: "bim-engineer", title: "Kỹ sư BIM (Building Information Modeling)", description: "Xây dựng mô hình 3D công trình và quản lý thông tin dự án bằng phần mềm BIM." },
+      { id: "urban-planner", title: "Chuyên gia quy hoạch đô thị", description: "Lập kế hoạch phát triển không gian đô thị, hạ tầng giao thông và khu dân cư." },
+      { id: "construction-supervisor", title: "Giám sát thi công & Quản lý dự án", description: "Kiểm tra tiến độ, chất lượng xây dựng và đảm bảo công trình thực hiện đúng thiết kế." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Khai mở tư duy thẩm mỹ & Lịch sử", description: "Xây dựng nền tảng về nghệ thuật, không gian và tìm hiểu các phong cách kiến trúc vĩ đại.", duration: "2-3 tháng", courses: [{ id: "c1", title: "Fundamentals of Graphic Design", platform: "Coursera", url: "https://www.coursera.org/learn/fundamentals-of-graphic-design" }, { id: "c2", title: "Roman Architecture", platform: "Coursera (Yale University)", url: "https://www.coursera.org/learn/roman-architecture" }] },
+      { id: "p2", title: "Rèn luyện công cụ & Kỹ thuật Thiết kế 3D", description: "Học cách sử dụng các phần mềm thiết kế chuyên dụng để hiện thực hóa ý tưởng.", duration: "3-6 tháng", courses: [{ id: "c3", title: "Làm quen SketchUp & AutoCAD", platform: "YouTube", url: "https://www.youtube.com/results?search_query=sketchup+tutorial+for+beginners" }, { id: "c4", title: "Kỹ năng Diễn họa Kiến trúc", platform: "Show It Better", url: "https://www.youtube.com/c/ShowItBetter" }] }
+    ]
   },
   {
     id: "education",
@@ -195,7 +284,17 @@ export const careers: Career[] = [
     requiredSkills: { "Giao tiếp": 10, "Kiên nhẫn": 10, "Đồng cảm": 9, "Sáng tạo": 7 },
     jobOutlook: "Nghề nghiệp bền vững, ý nghĩa xã hội cao",
     universityMajors: ["Sư phạm Tiếng Anh", "Giáo dục mầm non", "Sư phạm Toán học"],
-    roadmap: []
+    specificJobs: [
+      { id: "teacher", title: "Giáo viên phổ thông / Đại học", description: "Giảng dạy kiến thức chuyên môn và hướng dẫn học sinh/sinh viên phát triển toàn diện." },
+      { id: "language-teacher", title: "Giáo viên trung tâm ngoại ngữ / kỹ năng", description: "Giảng dạy tại các trung tâm tư nhân (Anh văn, kỹ năng mềm, STEM...)." },
+      { id: "instructional-designer", title: "Chuyên viên thiết kế chương trình (Instructional Designer)", description: "Xây dựng nội dung và phương pháp giảng dạy cho khóa học trực tuyến (E-learning)." },
+      { id: "principal", title: "Quản lý giáo dục / Hiệu trưởng", description: "Điều hành hoạt động của trường học hoặc trung tâm đào tạo." },
+      { id: "online-tutor", title: "Giáo viên/Gia sư trực tuyến (Online Tutor)", description: "Giảng dạy qua nền tảng online trong nước và quốc tế, thu nhập linh hoạt." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Nền tảng Sư phạm & Tâm lý học", description: "Hiểu về quá trình học tập của con người và các phương pháp truyền đạt kiến thức hiệu quả.", duration: "2-4 tháng", courses: [{ id: "c1", title: "Foundations of Teaching for Learning", platform: "Coursera", url: "https://www.coursera.org/learn/foundations-of-teaching" }, { id: "c2", title: "Tâm lý học Giáo dục cơ bản", platform: "YouTube", url: "https://www.youtube.com/results?search_query=educational+psychology" }] },
+      { id: "p2", title: "Công cụ giảng dạy hiện đại", description: "Ứng dụng công nghệ vào việc thiết kế bài giảng và tăng cường tương tác trong lớp học.", duration: "2-3 tháng", courses: [{ id: "c3", title: "Practical Teaching with Technology", platform: "Coursera", url: "https://www.coursera.org/learn/get-interactive-practical-teaching-with-technology" }, { id: "c4", title: "Kỹ năng thiết kế Slide & Presentation", platform: "YouTube", url: "https://www.youtube.com/results?search_query=powerpoint+presentation+design+tutorial" }] }
+    ]
   },
   {
     id: "law",
@@ -207,7 +306,17 @@ export const careers: Career[] = [
     requiredSkills: { "Tư duy phản biện": 10, "Tranh luận": 9, "Đọc hiểu": 9, "Ghi nhớ": 8 },
     jobOutlook: "Lộ trình thăng tiến rõ ràng, danh giá",
     universityMajors: ["Luật kinh tế", "Luật quốc tế", "Luật dân sự"],
-    roadmap: []
+    specificJobs: [
+      { id: "litigation-lawyer", title: "Luật sư tranh tụng", description: "Đại diện và bảo vệ quyền lợi khách hàng tại tòa án trong các vụ án dân sự, hình sự, kinh tế." },
+      { id: "in-house-counsel", title: "Chuyên viên pháp chế doanh nghiệp (In-house Counsel)", description: "Tư vấn pháp lý nội bộ, soạn thảo hợp đồng và đảm bảo tuân thủ pháp luật cho công ty." },
+      { id: "notary", title: "Công chứng viên / Thừa phát lại", description: "Xác nhận tính pháp lý các giao dịch dân sự như mua bán bất động sản, thừa kế." },
+      { id: "bank-legal", title: "Chuyên viên pháp lý ngân hàng", description: "Quản lý hồ sơ pháp lý tín dụng, thẩm định tài sản đảm bảo và xử lý nợ xấu." },
+      { id: "judge-prosecutor", title: "Thẩm phán / Kiểm sát viên / Điều tra viên", description: "Làm việc trong hệ thống tư pháp nhà nước tại tòa án, viện kiểm sát hoặc cơ quan điều tra." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Tư duy Phản biện & Triết lý Luật pháp", description: "Làm quen với các khái niệm luật học, cách tư duy logic và các nguyên tắc công lý cơ bản.", duration: "3-5 tháng", courses: [{ id: "c1", title: "Justice", platform: "edX (Harvard University)", url: "https://www.edx.org/course/justice" }, { id: "c2", title: "An Introduction to American Law", platform: "Coursera", url: "https://www.coursera.org/learn/american-law" }] },
+      { id: "p2", title: "Kỹ năng tranh luận & Luật chuyên ngành", description: "Phát triển kỹ năng đàm phán, tranh tụng và tìm hiểu về các bộ luật kinh tế, doanh nghiệp.", duration: "3-6 tháng", courses: [{ id: "c3", title: "Successful Negotiation: Essential Strategies", platform: "Coursera (University of Michigan)", url: "https://www.coursera.org/learn/negotiation-skills" }, { id: "c4", title: "Kiến thức Luật Doanh Nghiệp căn bản", platform: "YouTube", url: "https://www.youtube.com/results?search_query=lu%E1%BA%ADt+doanh+nghi%E1%BB%87p+c%C6%A1+b%E1%BA%A3n" }] }
+    ]
   },
   {
     id: "finance",
@@ -219,7 +328,17 @@ export const careers: Career[] = [
     requiredSkills: { "Tư duy phân tích": 9, "Làm việc với số": 9, "Quyết đoán": 8, "Nhạy bén": 8 },
     jobOutlook: "Thu nhập hấp dẫn, tính cạnh tranh cao",
     universityMajors: ["Tài chính ngân hàng", "Toán tài chính", "Kinh tế quốc tế"],
-    roadmap: []
+    specificJobs: [
+      { id: "investment-analyst", title: "Chuyên viên phân tích đầu tư (Investment Analyst)", description: "Nghiên cứu cổ phiếu, trái phiếu, bất động sản để đưa ra khuyến nghị đầu tư." },
+      { id: "fund-manager", title: "Quản lý quỹ đầu tư (Fund Manager)", description: "Quản lý danh mục tài sản của quỹ, tối ưu hóa lợi nhuận và kiểm soát rủi ro." },
+      { id: "relationship-manager", title: "Chuyên viên ngân hàng (Relationship Manager)", description: "Tư vấn sản phẩm tài chính, quản lý mối quan hệ với khách hàng cá nhân và doanh nghiệp." },
+      { id: "corporate-finance", title: "Chuyên viên tài chính doanh nghiệp (Corporate Finance)", description: "Lập kế hoạch tài chính, cấu trúc vốn và hỗ trợ các thương vụ M&A." },
+      { id: "risk-manager", title: "Chuyên gia quản trị rủi ro (Risk Manager)", description: "Nhận diện, đo lường và kiểm soát các rủi ro tài chính trong ngân hàng và bảo hiểm." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Thị trường Tài chính & Kinh tế vĩ mô", description: "Nắm vững cách dòng tiền vận hành trong nền kinh tế và các nguyên tắc tài chính doanh nghiệp.", duration: "3-4 tháng", courses: [{ id: "c1", title: "Financial Markets", platform: "Coursera (Yale University)", url: "https://www.coursera.org/learn/financial-markets-global" }, { id: "c2", title: "Corporate Finance Fundamentals", platform: "CFI", url: "https://corporatefinanceinstitute.com/collections/corporate-finance-fundamentals/" }] },
+      { id: "p2", title: "Phân tích Dữ liệu & Báo cáo Tài chính", description: "Học cách đọc hiểu báo cáo tài chính và sử dụng Excel để xây dựng các mô hình định giá.", duration: "3-5 tháng", courses: [{ id: "c3", title: "Excel Skills for Business Specialization", platform: "Coursera (Macquarie University)", url: "https://www.coursera.org/specializations/excel" }, { id: "c4", title: "Hướng dẫn đọc hiểu Báo cáo tài chính", platform: "YouTube", url: "https://www.youtube.com/results?search_query=%C4%91%E1%BB%8Dc+hi%E1%BB%83u+b%C3%A1o+c%C3%A1o+t%C3%A0i+ch%C3%ADnh" }] }
+    ]
   },
   {
     id: "engineering",
@@ -231,33 +350,15 @@ export const careers: Career[] = [
     requiredSkills: { "Giải quyết vấn đề": 9, "Toán": 8,  "Lý": 8, "Cẩn thận": 8 },
     jobOutlook: "Trụ cột không thể thiếu của nền công nghiệp",
     universityMajors: ["Kỹ thuật cơ khí", "Kỹ thuật điện - điện tử", "Kỹ thuật tự động hóa"],
+    specificJobs: [
+      { id: "mep-engineer", title: "Kỹ sư thiết kế cơ điện", description: "Thiết kế, tính toán kết cấu máy móc, hệ thống điện cho nhà máy và công trình." },
+      { id: "plc-engineer", title: "Kỹ sư tự động hóa / PLC", description: "Lập trình PLC, SCADA, điều khiển robot và hệ thống tự động trong dây chuyền sản xuất." },
+      { id: "maintenance-engineer", title: "Kỹ sư bảo trì thiết bị (Maintenance Engineer)", description: "Lên kế hoạch và thực hiện bảo dưỡng định kỳ, sửa chữa thiết bị máy móc công nghiệp." },
+      { id: "project-engineer", title: "Kỹ sư dự án (Project Engineer)", description: "Quản lý tiến độ, ngân sách và chất lượng kỹ thuật cho các dự án xây lắp cơ điện." },
+      { id: "renewable-energy-eng", title: "Kỹ sư năng lượng tái tạo", description: "Thiết kế và vận hành hệ thống điện mặt trời, điện gió, thủy điện nhỏ." },
+    ],
     roadmap: [
-      {
-        id: "p1", 
-        title: "Tư duy Kỹ thuật & Vật lý ứng dụng", 
-        description: "Xây dựng nền tảng vững chắc về Cơ học, Điện học và làm quen với công cụ thiết kế mô phỏng (CAD/Mạch điện) dành cho người mới bắt đầu.", 
-        duration: "3-6 tháng",
-        courses: [
-          { 
-            id: "c1", 
-            title: "Electrical Engineering (Kỹ thuật Điện cơ bản)", 
-            platform: "Khan Academy", 
-            url: "https://www.khanacademy.org/science/electrical-engineering" 
-          },
-          { 
-            id: "c2", 
-            title: "Làm quen thiết kế 3D & Mạch điện ảo (Tinkercad)", 
-            platform: "Autodesk", 
-            url: "https://www.tinkercad.com/" 
-          },
-          { 
-            id: "c3", 
-            title: "Introduction to Engineering Mechanics (Cơ học kỹ thuật)", 
-            platform: "Coursera", 
-            url: "https://www.coursera.org/learn/engineering-mechanics-statics" 
-          }
-        ]
-      }
+      { id: "p1", title: "Tư duy Kỹ thuật & Vật lý ứng dụng", description: "Xây dựng nền tảng vững chắc về Cơ học, Điện học và làm quen với công cụ thiết kế mô phỏng (CAD/Mạch điện) dành cho người mới bắt đầu.", duration: "3-6 tháng", courses: [{ id: "c1", title: "Electrical Engineering (Kỹ thuật Điện cơ bản)", platform: "Khan Academy", url: "https://www.khanacademy.org/science/electrical-engineering" }, { id: "c2", title: "Làm quen thiết kế 3D & Mạch điện ảo (Tinkercad)", platform: "Autodesk", url: "https://www.tinkercad.com/" }, { id: "c3", title: "Introduction to Engineering Mechanics (Cơ học kỹ thuật)", platform: "Coursera", url: "https://www.coursera.org/learn/engineering-mechanics-statics" }] }
     ]
   },
   {
@@ -270,19 +371,17 @@ export const careers: Career[] = [
     requiredSkills: { "Chịu áp lực": 10, "Trí nhớ": 9, "Giao tiếp": 8, "Giải quyết vấn đề": 9 },
     jobOutlook: "Nhu cầu luôn cao, thu nhập thuộc top đầu",
     universityMajors: ["Y đa khoa", "Răng hàm mặt", "Y học cổ truyền"],
-    roadmap: []
-  },
-  {
-    id: "social-work",
-    majorName: "social work",
-    name: "Công Tác Xã Hội",
-    description: "Hỗ trợ và nâng cao chất lượng cuộc sống cho các cá nhân, gia đình và cộng đồng đang gặp khó khăn. Rất phù hợp với những người có lòng trắc ẩn, kiên nhẫn và kỹ năng kết nối xã hội (Social) mạnh mẽ.",
-    matchingScore: 0,
-    coreSkills: ["Tham vấn", "Tổ chức cộng đồng", "Đánh giá nhu cầu", "Lắng nghe sâu"],
-    requiredSkills: { "Đồng cảm": 10, "Kiên nhẫn": 9, "Giao tiếp": 9, "Linh hoạt": 8 },
-    jobOutlook: "Ngày càng được chú trọng trong xã hội hiện đại",
-    universityMajors: ["Công tác xã hội", "Xã hội học"],
-    roadmap: []
+    specificJobs: [
+      { id: "general-doctor", title: "Bác sĩ đa khoa / Chuyên khoa", description: "Thăm khám, chẩn đoán và điều trị bệnh tại bệnh viện công, phòng khám tư hoặc phòng mạch riêng." },
+      { id: "surgeon", title: "Bác sĩ phẫu thuật", description: "Thực hiện các ca phẫu thuật nội soi, mở bụng, chỉnh hình... tại phòng mổ bệnh viện." },
+      { id: "medical-researcher", title: "Nghiên cứu viên y học / Dược học", description: "Nghiên cứu phát triển thuốc mới, vaccine và phương pháp điều trị tại viện nghiên cứu." },
+      { id: "public-health-doctor", title: "Bác sĩ y tế công cộng", description: "Xây dựng và triển khai chương trình phòng chống dịch bệnh, sức khỏe cộng đồng." },
+      { id: "export-doctor", title: "Bác sĩ xuất khẩu lao động", description: "Làm việc tại bệnh viện nước ngoài (Mỹ, Úc, Đức) với thu nhập $150,000–$400,000/năm." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Nền tảng Cơ thể người & Giải phẫu", description: "Khám phá cấu trúc, chức năng của các hệ cơ quan trong cơ thể người từ góc độ sinh học.", duration: "3-6 tháng", courses: [{ id: "c1", title: "Anatomy Specialization", platform: "Coursera (University of Michigan)", url: "https://www.coursera.org/specializations/anatomy" }, { id: "c2", title: "Crash Course Anatomy & Physiology", platform: "YouTube", url: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtOAKed_MxxWBNaPno5h3Zs8" }] },
+      { id: "p2", title: "Dấu hiệu sinh tồn & Thuật ngữ Lâm sàng", description: "Làm quen với các chỉ số sức khỏe cơ bản và cách giao tiếp chuẩn mực trong môi trường y khoa.", duration: "2-4 tháng", courses: [{ id: "c3", title: "Vital Signs: Understanding What the Body Is Telling Us", platform: "Coursera (University of Pennsylvania)", url: "https://www.coursera.org/learn/vital-signs" }, { id: "c4", title: "Clinical Terminology for International and U.S. Students", platform: "Coursera (University of Pittsburgh)", url: "https://www.coursera.org/learn/clinical-terminology" }] }
+    ]
   },
   {
     id: "economics",
@@ -294,7 +393,17 @@ export const careers: Career[] = [
     requiredSkills: { "Phân tích": 10, "Toán học": 8, "Tư duy logic": 9, "Nghiên cứu": 8 },
     jobOutlook: "Cơ hội tốt ở các viện nghiên cứu, tập đoàn đa quốc gia",
     universityMajors: ["Kinh tế học", "Kinh tế quốc tế", "Kinh tế phát triển"],
-    roadmap: []
+    specificJobs: [
+      { id: "economic-researcher", title: "Chuyên viên nghiên cứu kinh tế", description: "Phân tích kinh tế vĩ mô, dự báo thị trường và viết báo cáo nghiên cứu cho tổ chức tài chính." },
+      { id: "policy-advisor", title: "Chuyên gia tư vấn chính sách", description: "Đề xuất và phân tích tác động của các chính sách kinh tế cho chính phủ hoặc tổ chức quốc tế." },
+      { id: "industry-analyst", title: "Chuyên viên phân tích ngành (Industry Analyst)", description: "Nghiên cứu xu hướng ngành, đối thủ và cơ hội thị trường cho doanh nghiệp." },
+      { id: "econometrician", title: "Chuyên gia kinh tế lượng / Mô hình hóa", description: "Xây dựng mô hình toán kinh tế dự báo tăng trưởng, lạm phát, rủi ro thị trường." },
+      { id: "intl-org-specialist", title: "Chuyên viên tổ chức quốc tế (IMF, WB, ADB)", description: "Làm việc tại các tổ chức tài chính quốc tế về chính sách phát triển kinh tế." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Kinh tế Vĩ mô & Vi mô cốt lõi", description: "Nắm vững cung cầu, lạm phát, và cách các cá nhân cũng như quốc gia đưa ra quyết định tài chính.", duration: "3-5 tháng", courses: [{ id: "c1", title: "Microeconomics Principles", platform: "Coursera (University of Illinois)", url: "https://www.coursera.org/learn/microeconomics" }, { id: "c2", title: "Crash Course Economics", platform: "YouTube", url: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtPNZwz5_o_5uirJ8gQXnhEO" }] },
+      { id: "p2", title: "Kinh tế lượng & Phân tích Dữ liệu", description: "Học cách dùng dữ liệu thống kê để chứng minh các lý thuyết và dự báo xu hướng kinh tế.", duration: "3-6 tháng", courses: [{ id: "c3", title: "Econometrics: Methods and Applications", platform: "Coursera (Erasmus University Rotterdam)", url: "https://www.coursera.org/learn/erasmus-econometrics" }, { id: "c4", title: "Data Analysis with Excel", platform: "YouTube", url: "https://www.youtube.com/results?search_query=excel+data+analysis+tutorial" }] }
+    ]
   },
   {
     id: "mechanical-engineering",
@@ -306,19 +415,17 @@ export const careers: Career[] = [
     requiredSkills: { "Toán": 9, "Lý": 9, "Sáng tạo": 7, "Cẩn thận": 8 },
     jobOutlook: "Cốt lõi của ngành công nghiệp sản xuất, luôn cần nhân lực",
     universityMajors: ["Cơ khí chế tạo máy", "Cơ điện tử", "Kỹ thuật nhiệt"],
-    roadmap: []
-  },
-  {
-    id: "communication",
-    majorName: "communication",
-    name: "Truyền Thông Đại Chúng",
-    description: "Sáng tạo và lan tỏa thông tin qua các phương tiện truyền thông như báo chí, đài phát thanh, truyền hình và mạng xã hội. Dành cho những người năng động, thích kết nối và có khả năng sử dụng ngôn ngữ linh hoạt.",
-    matchingScore: 0,
-    coreSkills: ["Viết lách", "Biên tập", "Nói trước công chúng", "Xử lý khủng hoảng"],
-    requiredSkills: { "Giao tiếp": 10, "Sáng tạo": 8, "Ngôn ngữ": 9, "Linh hoạt": 9 },
-    jobOutlook: "Năng động và mở ra nhiều cơ hội khởi nghiệp",
-    universityMajors: ["Báo chí", "Truyền thông đa phương tiện", "Quan hệ công chúng"],
-    roadmap: []
+    specificJobs: [
+      { id: "cad-cam-engineer", title: "Kỹ sư thiết kế cơ khí (CAD/CAM)", description: "Thiết kế chi tiết máy, khuôn mẫu và dây chuyền sản xuất bằng phần mềm SolidWorks, CATIA." },
+      { id: "manufacturing-engineer", title: "Kỹ sư sản xuất / Công nghệ chế tạo", description: "Lên quy trình gia công, vận hành máy CNC và kiểm soát chất lượng sản phẩm cơ khí." },
+      { id: "robotics-engineer", title: "Kỹ sư Cơ điện tử / Robotics", description: "Thiết kế và lập trình robot công nghiệp, hệ thống cơ điện tử thông minh." },
+      { id: "automotive-engineer", title: "Kỹ sư ô tô & xe điện", description: "Nghiên cứu, thiết kế hệ thống động cơ, hệ thống truyền động cho xe hơi và xe điện." },
+      { id: "hvac-engineer", title: "Kỹ sư HVAC (Điều hòa không khí & thông gió)", description: "Thiết kế và thi công hệ thống điều hòa, thông gió cho tòa nhà và nhà máy." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Cơ học Kỹ thuật & Vẽ 2D/3D", description: "Xây dựng tư duy không gian và hiểu các định luật vật lý tác động lên vật rắn.", duration: "3-5 tháng", courses: [{ id: "c1", title: "Introduction to Engineering Mechanics", platform: "Coursera (Georgia Tech)", url: "https://www.coursera.org/learn/engineering-mechanics-statics" }, { id: "c2", title: "AutoCAD 2D & 3D Tutorial for Beginners", platform: "YouTube", url: "https://www.youtube.com/results?search_query=autocad+tutorial+for+beginners" }] },
+      { id: "p2", title: "Thiết kế Máy & Vật liệu", description: "Mô phỏng động lực học và thiết kế các chi tiết máy phức tạp bằng phần mềm chuyên dụng.", duration: "4-6 tháng", courses: [{ id: "c3", title: "Machine Design Part I", platform: "Coursera (Georgia Tech)", url: "https://www.coursera.org/learn/machine-design1" }, { id: "c4", title: "SolidWorks Basics Tutorial", platform: "YouTube", url: "https://www.youtube.com/results?search_query=solidworks+tutorial+for+beginners" }] }
+    ]
   },
   {
     id: "biology",
@@ -330,7 +437,17 @@ export const careers: Career[] = [
     requiredSkills: { "Nghiên cứu": 10, "Cẩn thận": 9, "Phân tích": 8, "Khoa học tự nhiên": 8 },
     jobOutlook: "Nhu cầu cao trong ngành y tế, nông nghiệp công nghệ cao và R&D",
     universityMajors: ["Công nghệ sinh học", "Sinh học", "Kỹ thuật y sinh"],
-    roadmap: []
+    specificJobs: [
+      { id: "lab-researcher", title: "Nghiên cứu viên phòng thí nghiệm", description: "Thực hiện các thí nghiệm sinh học phân tử, di truyền học tại viện nghiên cứu hoặc trường đại học." },
+      { id: "qc-pharma-bio", title: "Chuyên viên kiểm nghiệm thực phẩm / dược phẩm", description: "Kiểm tra chất lượng, an toàn vệ sinh thực phẩm và dược phẩm theo tiêu chuẩn GMP." },
+      { id: "agri-biotech", title: "Kỹ sư công nghệ sinh học nông nghiệp", description: "Nghiên cứu giống cây trồng biến đổi gen, phân bón sinh học và bảo vệ thực vật." },
+      { id: "clinical-biomedical", title: "Chuyên viên y sinh học lâm sàng", description: "Phân tích mẫu bệnh phẩm, hỗ trợ chẩn đoán bệnh tại phòng xét nghiệm bệnh viện." },
+      { id: "environmental-specialist", title: "Chuyên viên môi trường & Xử lý chất thải sinh học", description: "Xử lý ô nhiễm môi trường bằng phương pháp sinh học tại các công ty môi trường." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Tế bào & Di truyền học", description: "Nắm vững cấu trúc tế bào, DNA, RNA và các nguyên lý di truyền học nền tảng.", duration: "2-4 tháng", courses: [{ id: "c1", title: "Introduction to Genetics and Evolution", platform: "Coursera (Duke University)", url: "https://www.coursera.org/learn/genetics-evolution" }, { id: "c2", title: "Crash Course Biology", platform: "YouTube", url: "https://www.youtube.com/playlist?list=PL3EED4C1D684D3ADF" }] },
+      { id: "p2", title: "Tin sinh học (Bioinformatics) & Kỹ năng Lab", description: "Ứng dụng máy tính để phân tích dữ liệu sinh học và làm quen với thao tác phòng thí nghiệm.", duration: "3-5 tháng", courses: [{ id: "c3", title: "Bioinformatics Specialization", platform: "Coursera (UC San Diego)", url: "https://www.coursera.org/specializations/bioinformatics" }, { id: "c4", title: "Kỹ thuật PCR & Thao tác Phòng thí nghiệm", platform: "YouTube", url: "https://www.youtube.com/results?search_query=pcr+technique+animation" }] }
+    ]
   },
   {
     id: "civil-engineering",
@@ -342,7 +459,17 @@ export const careers: Career[] = [
     requiredSkills: { "Thực hành": 9, "Toán học & Vật lý": 9, "Làm việc nhóm": 8, "Chịu áp lực": 8 },
     jobOutlook: "Nghề nghiệp ổn định, gắn liền với sự phát triển hạ tầng của quốc gia",
     universityMajors: ["Kỹ thuật công trình xây dựng", "Quản lý xây dựng", "Kỹ thuật hạ tầng đô thị"],
-    roadmap: []
+    specificJobs: [
+      { id: "structural-engineer", title: "Kỹ sư kết cấu", description: "Tính toán và thiết kế kết cấu bê tông, thép cho nhà cao tầng, cầu đường, hầm chui." },
+      { id: "site-supervisor", title: "Giám sát thi công công trình", description: "Kiểm tra chất lượng thi công ngoài công trường, đảm bảo đúng thiết kế và tiến độ." },
+      { id: "infrastructure-engineer", title: "Kỹ sư giao thông & hạ tầng", description: "Thiết kế đường bộ, hệ thống thoát nước và hạ tầng đô thị." },
+      { id: "construction-pm", title: "Quản lý dự án xây dựng (PM)", description: "Điều phối nhà thầu, ngân sách và tiến độ dự án xây dựng quy mô lớn." },
+      { id: "geotechnical-consultant", title: "Chuyên viên tư vấn địa kỹ thuật", description: "Khảo sát nền đất, thiết kế móng và xử lý địa chất yếu cho công trình." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Cơ học Vật liệu & AutoCAD", description: "Tính toán sức chịu tải của vật liệu xây dựng và thành thạo phần mềm vẽ kỹ thuật dân dụng.", duration: "3-5 tháng", courses: [{ id: "c1", title: "Mechanics of Materials I", platform: "Coursera (Georgia Tech)", url: "https://www.coursera.org/learn/mechanics-1" }, { id: "c2", title: "AutoCAD Floor Plan Tutorial", platform: "YouTube", url: "https://www.youtube.com/results?search_query=autocad+floor+plan+tutorial+for+beginners" }] },
+      { id: "p2", title: "Quản lý Dự án & Thiết kế BIM (Revit)", description: "Lên lịch trình thi công, dự toán chi phí và dựng mô hình thông tin công trình (BIM).", duration: "4-6 tháng", courses: [{ id: "c3", title: "Construction Project Management", platform: "Coursera (Columbia University)", url: "https://www.coursera.org/learn/construction-project-management" }, { id: "c4", title: "Revit Architecture Tutorial", platform: "YouTube", url: "https://www.youtube.com/results?search_query=revit+architecture+tutorial+for+beginners" }] }
+    ]
   },
   {
     id: "english",
@@ -354,19 +481,17 @@ export const careers: Career[] = [
     requiredSkills: { "Ngôn ngữ": 10, "Giao tiếp": 9, "Thích ứng": 8, "Tư duy phản biện": 7 },
     jobOutlook: "Rất linh hoạt, dễ dàng chuyển đổi sang nhiều lĩnh vực khác nhau",
     universityMajors: ["Ngôn ngữ Anh", "Sư phạm tiếng Anh", "Quốc tế học"],
-    roadmap: []
-  },
-  {
-    id: "criminal-justice",
-    majorName: "criminal justice",
-    name: "Tư Pháp Hình Sự & An Ninh",
-    description: "Nghiên cứu hệ thống pháp luật, tội phạm học và các cơ quan thực thi pháp luật. Phù hợp cho những ai có tinh thần trượng nghĩa, tư duy logic nhạy bén, dũng cảm và tuân thủ kỷ luật nghiêm ngặt.",
-    matchingScore: 0,
-    coreSkills: ["Điều tra", "Luật hình sự", "Tâm lý học tội phạm", "Bảo vệ an ninh"],
-    requiredSkills: { "Tư duy logic": 9, "Chịu áp lực": 10, "Kỷ luật": 10, "Quan sát": 9 },
-    jobOutlook: "Ngành nghề thiết yếu và mang tính đặc thù cao trong bộ máy nhà nước",
-    universityMajors: ["Cảnh sát nhân dân", "An ninh nhân dân", "Tội phạm học", "Luật hình sự"],
-    roadmap: []
+    specificJobs: [
+      { id: "interpreter", title: "Biên phiên dịch (Interpreter/Translator)", description: "Dịch tài liệu, phiên dịch tại hội nghị, đàm phán kinh doanh quốc tế." },
+      { id: "english-teacher", title: "Giáo viên tiếng Anh / IELTS", description: "Giảng dạy tiếng Anh tại trường học, trung tâm hoặc dạy online cho học sinh quốc tế." },
+      { id: "intl-communications", title: "Chuyên viên truyền thông quốc tế", description: "Quản lý nội dung truyền thông bằng tiếng Anh cho doanh nghiệp đa quốc gia." },
+      { id: "diplomat", title: "Chuyên viên quan hệ đối ngoại / Ngoại giao", description: "Làm việc tại đại sứ quán, lãnh sự quán hoặc tổ chức quốc tế (UN, UNESCO...)." },
+      { id: "english-copywriter", title: "Content Writer / Copywriter tiếng Anh", description: "Viết nội dung chuyên nghiệp bằng tiếng Anh cho báo chí, marketing, xuất bản." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Viết Học thuật & Ngữ pháp chuyên sâu", description: "Rèn luyện kỹ năng viết luận, email và báo cáo chuyên nghiệp theo chuẩn quốc tế.", duration: "3-4 tháng", courses: [{ id: "c1", title: "Academic English: Writing Specialization", platform: "Coursera (UC Irvine)", url: "https://www.coursera.org/specializations/academic-english" }, { id: "c2", title: "IELTS Writing Task 2 Tips", platform: "YouTube (IELTS Advantage)", url: "https://www.youtube.com/c/Ieltsadvantage" }] },
+      { id: "p2", title: "Giao tiếp Đa văn hóa & Nền tảng Biên dịch", description: "Thấu hiểu sự khác biệt văn hóa trong kinh doanh và nhập môn các kỹ năng dịch thuật.", duration: "2-4 tháng", courses: [{ id: "c3", title: "Intercultural Communication", platform: "Coursera (Shanghai International Studies University)", url: "https://www.coursera.org/learn/intercultural-communication" }, { id: "c4", title: "Kỹ năng Biên Phiên Dịch cơ bản", platform: "YouTube", url: "https://www.youtube.com/results?search_query=k%E1%BB%B9+n%C4%83ng+bi%C3%AAn+phi%C3%AAn+d%E1%BB%8Bch" }] }
+    ]
   },
   {
     id: "chemistry",
@@ -378,19 +503,17 @@ export const careers: Career[] = [
     requiredSkills: { "Nghiên cứu": 10, "Cẩn thận": 10, "Toán học & Vật lý": 8, "Giải quyết vấn đề": 8 },
     jobOutlook: "Cơ hội làm việc rộng mở trong các ngành công nghiệp FMCG, dược phẩm và năng lượng",
     universityMajors: ["Công nghệ kỹ thuật hóa học", "Hóa học", "Hóa dược", "Công nghệ thực phẩm"],
-    roadmap: []
-  },
-  {
-    id: "counseling",
-    majorName: "counseling",
-    name: "Tham Vấn Tâm Lý & Trị Liệu",
-    description: "Hỗ trợ và đồng hành cùng khách hàng vượt qua các vấn đề tâm lý, cảm xúc hoặc các biến cố trong cuộc sống. Đòi hỏi kỹ năng lắng nghe sâu sắc, sự thấu cảm tuyệt đối và tính kiên nhẫn cao.",
-    matchingScore: 0,
-    coreSkills: ["Lắng nghe tích cực", "Thấu cảm", "Giải quyết xung đột", "Tâm lý học hành vi"],
-    requiredSkills: { "Thấu cảm": 10, "Giao tiếp": 9, "Lắng nghe": 10, "Kiên nhẫn": 9 },
-    jobOutlook: "Nhu cầu chăm sóc sức khỏe tinh thần đang tăng vọt trong xã hội hiện đại",
-    universityMajors: ["Tham vấn tâm lý", "Tâm lý học lâm sàng", "Công tác xã hội"],
-    roadmap: []
+    specificJobs: [
+      { id: "lab-analyst", title: "Chuyên viên phân tích hóa học (Lab Analyst)", description: "Phân tích thành phần hóa học của nguyên liệu và sản phẩm trong phòng thí nghiệm." },
+      { id: "materials-researcher", title: "Kỹ sư nghiên cứu vật liệu mới", description: "Nghiên cứu và phát triển vật liệu polymer, composite, nanomaterial cho công nghiệp." },
+      { id: "qc-pharma", title: "Chuyên viên kiểm soát chất lượng dược phẩm (QC Pharma)", description: "Đảm bảo thuốc sản xuất đạt tiêu chuẩn GMP của Bộ Y tế và quốc tế." },
+      { id: "chemical-production", title: "Kỹ sư sản xuất sơn, mực in, chất kết dính", description: "Vận hành và cải tiến quy trình sản xuất các sản phẩm hóa chất công nghiệp." },
+      { id: "chemistry-lecturer", title: "Giảng viên / Nghiên cứu viên Hóa học", description: "Giảng dạy và thực hiện các đề tài nghiên cứu khoa học tại trường đại học hoặc viện." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Hóa học Vô cơ & Hữu cơ nền tảng", description: "Hiểu bản chất liên kết hóa học, phản ứng và cấu trúc của các hợp chất hữu cơ.", duration: "3-5 tháng", courses: [{ id: "c1", title: "Advanced Chemistry", platform: "Coursera (University of Kentucky)", url: "https://www.coursera.org/learn/advanced-chemistry" }, { id: "c2", title: "Crash Course Chemistry", platform: "YouTube", url: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtPHzzYuWy6fYEaX9mQQ8oGr" }] },
+      { id: "p2", title: "Hóa Phân tích & An toàn Phòng thí nghiệm", description: "Sử dụng các thiết bị để định lượng chất và nắm vững quy chuẩn an toàn hóa chất.", duration: "2-4 tháng", courses: [{ id: "c3", title: "Analytical Chemistry Basics", platform: "YouTube", url: "https://www.youtube.com/results?search_query=analytical+chemistry+introduction" }, { id: "c4", title: "Chemical Safety & Lab Techniques", platform: "YouTube", url: "https://www.youtube.com/results?search_query=chemistry+lab+safety+and+techniques" }] }
+    ]
   },
   {
     id: "sociology",
@@ -402,7 +525,17 @@ export const careers: Career[] = [
     requiredSkills: { "Phân tích": 9, "Quan sát": 9, "Tư duy phản biện": 8, "Giao tiếp": 8 },
     jobOutlook: "Nhiều cơ hội tại các tổ chức phi chính phủ (NGO), viện nghiên cứu, hoặc bộ phận CSR của doanh nghiệp",
     universityMajors: ["Xã hội học", "Nhân học", "Quốc tế học"],
-    roadmap: []
+    specificJobs: [
+      { id: "sociological-researcher", title: "Nghiên cứu viên xã hội học", description: "Thực hiện khảo sát, phân tích định tính/định lượng về các vấn đề xã hội tại viện nghiên cứu." },
+      { id: "market-researcher-soc", title: "Chuyên viên nghiên cứu thị trường", description: "Tìm hiểu hành vi, thái độ và nhu cầu của người tiêu dùng cho các doanh nghiệp." },
+      { id: "csr-specialist", title: "Chuyên viên CSR & Phát triển bền vững", description: "Xây dựng và triển khai các chương trình trách nhiệm xã hội doanh nghiệp." },
+      { id: "investigative-journalist", title: "Phóng viên / Nhà báo điều tra xã hội", description: "Viết bài phân tích sâu về các vấn đề xã hội, chính sách công và bất bình đẳng." },
+      { id: "ngo-coordinator-soc", title: "Điều phối dự án NGO / Phát triển quốc tế", description: "Quản lý dự án phát triển cộng đồng, giảm nghèo do tổ chức quốc tế tài trợ." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Lý thuyết Xã hội học Cổ điển", description: "Khám phá các tư tưởng nền tảng định hình các cấu trúc và giai cấp trong xã hội.", duration: "2-4 tháng", courses: [{ id: "c1", title: "Classical Sociological Theory", platform: "Coursera (University of Amsterdam)", url: "https://www.coursera.org/learn/classical-sociological-theory" }, { id: "c2", title: "Crash Course Sociology", platform: "YouTube", url: "https://www.youtube.com/playlist?list=PL8dPuuaLjXtMJ-AfB_7J1538YKWkZAnGA" }] },
+      { id: "p2", title: "Phương pháp Nghiên cứu & Phân tích Dữ liệu", description: "Học cách thiết kế bảng hỏi, phỏng vấn sâu và xử lý dữ liệu khảo sát bằng phần mềm.", duration: "3-5 tháng", courses: [{ id: "c3", title: "Qualitative Research Methods", platform: "Coursera (UC Davis)", url: "https://www.coursera.org/learn/qualitative-methods" }, { id: "c4", title: "Hướng dẫn phân tích SPSS cơ bản", platform: "YouTube", url: "https://www.youtube.com/results?search_query=spss+for+beginners" }] }
+    ]
   },
   {
     id: "history",
@@ -414,19 +547,17 @@ export const careers: Career[] = [
     requiredSkills: { "Trí nhớ": 9, "Đọc hiểu": 10, "Nghiên cứu": 9, "Tư duy phân tích": 8 },
     jobOutlook: "Làm việc tại bảo tàng, viện nghiên cứu, hoặc làm cố vấn văn hóa, biên kịch, nhà báo",
     universityMajors: ["Lịch sử học", "Bảo tàng học", "Văn hóa học", "Hán Nôm"],
-    roadmap: []
-  },
-  {
-    id: "political-science",
-    majorName: "political science",
-    name: "Khoa Học Chính Trị & Ngoại Giao",
-    description: "Nghiên cứu về nhà nước, chính phủ, chính sách công và quan hệ quốc tế. Đòi hỏi sự nhạy bén với các vấn đề thời sự, tư duy chiến lược và kỹ năng ngoại giao, đàm phán xuất sắc.",
-    matchingScore: 0,
-    coreSkills: ["Phân tích chính sách", "Đàm phán", "Quan hệ công chúng", "Luật quốc tế"],
-    requiredSkills: { "Tư duy chiến lược": 9, "Đàm phán": 9, "Giao tiếp": 10, "Nhạy bén": 8 },
-    jobOutlook: "Môi trường làm việc danh giá tại các cơ quan nhà nước, đại sứ quán và tổ chức quốc tế",
-    universityMajors: ["Quan hệ quốc tế", "Khoa học chính trị", "Chính sách công"],
-    roadmap: []
+    specificJobs: [
+      { id: "history-researcher", title: "Cán bộ nghiên cứu / Giảng viên Lịch sử", description: "Nghiên cứu và giảng dạy lịch sử tại các trường đại học hoặc viện nghiên cứu." },
+      { id: "museum-specialist", title: "Chuyên viên bảo tàng & Di sản văn hóa", description: "Quản lý, bảo tồn hiện vật và thiết kế trưng bày tại bảo tàng." },
+      { id: "history-editor", title: "Biên tập viên xuất bản / Nhà báo", description: "Viết và biên tập các tác phẩm lịch sử, văn hóa cho báo chí và nhà xuất bản." },
+      { id: "archivist", title: "Chuyên viên lưu trữ quốc gia", description: "Bảo quản, phân loại và khai thác tài liệu lịch sử tại các trung tâm lưu trữ nhà nước." },
+      { id: "historical-advisor", title: "Biên kịch / Cố vấn lịch sử phim ảnh", description: "Tư vấn về bối cảnh lịch sử cho các dự án phim, game và truyền thông." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Lịch sử Thế giới vĩ mô (Big History)", description: "Nhìn nhận lịch sử nhân loại trong một bức tranh toàn cảnh từ vụ nổ Big Bang đến hiện tại.", duration: "3-5 tháng", courses: [{ id: "c1", title: "Big History: Connecting Knowledge", platform: "Coursera (Macquarie University)", url: "https://www.coursera.org/learn/big-history" }, { id: "c2", title: "Crash Course World History", platform: "YouTube", url: "https://www.youtube.com/playlist?list=PLBDA2E52FB1EF80C9" }] },
+      { id: "p2", title: "Lịch sử Hiện đại & Kỹ năng Nghiên cứu", description: "Đi sâu vào các sự kiện toàn cầu từ thế kỷ 18 và rèn luyện kỹ năng phân tích sử liệu học thuật.", duration: "3-5 tháng", courses: [{ id: "c3", title: "The Modern World, Part One: Global History", platform: "Coursera (University of Virginia)", url: "https://www.coursera.org/learn/modern-world" }, { id: "c4", title: "Tóm tắt Lịch sử Việt Nam", platform: "YouTube", url: "https://www.youtube.com/results?search_query=t%C3%B3m+t%E1%BA%AFt+l%E1%BB%8Bch+s%E1%BB%AD+vi%E1%BB%87t+nam" }] }
+    ]
   },
   {
     id: "management",
@@ -438,67 +569,17 @@ export const careers: Career[] = [
     requiredSkills: { "Lãnh đạo": 8, "Giao tiếp": 10, "Giải quyết xung đột": 9, "Thấu cảm": 8 },
     jobOutlook: "Ngành nghề xương sống của mọi công ty, cơ hội việc làm luôn rộng mở ở mọi lĩnh vực",
     universityMajors: ["Quản trị nhân lực", "Hành chính văn phòng", "Quản lý công nghiệp"],
-    roadmap: []
-  },
-  {
-    id: "science",
-    majorName: "science",
-    name: "Nghiên Cứu Khoa Học Tự Nhiên",
-    description: "Khám phá các quy luật của tự nhiên, vật chất và vũ trụ (như Vật lý, Môi trường học). Sinh ra dành cho những bộ óc tò mò (Investigative), đam mê thí nghiệm và muốn giải quyết các thách thức toàn cầu.",
-    matchingScore: 0,
-    coreSkills: ["Phương pháp nghiên cứu", "Thu thập số liệu", "Suy luận logic", "Viết báo cáo học thuật"],
-    requiredSkills: { "Phân tích": 10, "Tư duy logic": 9, "Kiên nhẫn": 9, "Quan sát": 8 },
-    jobOutlook: "Rất quan trọng cho chiến lược phát triển bền vững của quốc gia",
-    universityMajors: ["Khoa học môi trường", "Vật lý học", "Khoa học vật liệu", "Hải dương học"],
-    roadmap: []
-  },
-  {
-    id: "graphic-design",
-    majorName: "graphic design",
-    name: "Thiết Kế Đồ Họa & Mỹ Thuật",
-    description: "Truyền tải thông điệp truyền thông thông qua hình ảnh, màu sắc và typography. Dành cho những bạn có óc thẩm mỹ cao (Artistic), yêu cái đẹp và luôn tràn ngập ý tưởng sáng tạo độc đáo.",
-    matchingScore: 0,
-    coreSkills: ["Sử dụng phần mềm (Adobe)", "Tư duy hình ảnh", "Phối màu & Bố cục", "UI/UX cơ bản"],
-    requiredSkills: { "Sáng tạo": 10, "Thẩm mỹ": 10, "Thấu hiểu người dùng": 8, "Chịu áp lực": 8 },
-    jobOutlook: "Nhu cầu cực cao trong kỷ nguyên Digital Marketing",
-    universityMajors: ["Thiết kế đồ họa", "Mỹ thuật công nghiệp", "Thiết kế mỹ thuật số"],
-    roadmap: []
-  },
-  {
-    id: "logistics",
-    majorName: "logistics",
-    name: "Logistics & Chuỗi Cung Ứng",
-    description: "Quản lý dòng chảy của hàng hóa từ nhà cung cấp đến tay người tiêu dùng cuối cùng. Cực kỳ phù hợp với những người có tư duy hệ thống, nhạy bén và giỏi sắp xếp, tổ chức (Conventional).",
-    matchingScore: 0,
-    coreSkills: ["Quản lý kho bãi", "Tối ưu hóa vận tải", "Đàm phán quốc tế", "Luật xuất nhập khẩu"],
-    requiredSkills: { "Tư duy hệ thống": 9, "Giải quyết vấn đề": 9, "Chịu áp lực": 9, "Cẩn thận": 8 },
-    jobOutlook: "Xương sống của thương mại điện tử, tăng trưởng bùng nổ",
-    universityMajors: ["Logistics và Quản lý chuỗi cung ứng", "Kinh tế quốc tế", "Thương mại điện tử"],
-    roadmap: []
-  },
-  {
-    id: "tourism",
-    majorName: "tourism",
-    name: "Du Lịch & Quản Trị Khách Sạn",
-    description: "Cung cấp trải nghiệm nghỉ dưỡng, vui chơi và dịch vụ lưu trú. Ngành nghề lý tưởng cho những cá nhân hướng ngoại, thân thiện (Social), yêu thích dịch vụ và giao tiếp đa văn hóa.",
-    matchingScore: 0,
-    coreSkills: ["Dịch vụ khách hàng", "Quản trị sự kiện", "Ngoại ngữ giao tiếp", "Xử lý tình huống"],
-    requiredSkills: { "Giao tiếp": 10, "Thấu cảm": 9, "Linh hoạt": 9, "Thể lực": 7 },
-    jobOutlook: "Phục hồi mạnh mẽ và luôn khát nhân sự chất lượng cao",
-    universityMajors: ["Quản trị dịch vụ du lịch và lữ hành", "Quản trị khách sạn", "Việt Nam học"],
-    roadmap: []
-  },
-  {
-    id: "data-science",
-    majorName: "data science",
-    name: "Khoa Học Dữ Liệu & AI",
-    description: "Khai thác 'vàng' từ những mỏ dữ liệu khổng lồ để đưa ra dự đoán và quyết định chiến lược. Đây là ngành giao thoa đỉnh cao giữa Toán học, Thống kê và Khoa học máy tính.",
-    matchingScore: 0,
-    coreSkills: ["Lập trình Python/R", "Machine Learning", "Thống kê ứng dụng", "Trực quan hóa dữ liệu"],
-    requiredSkills: { "Toán học": 10, "Phân tích logic": 10, "Giải quyết vấn đề": 9, "Nhạy bén kinh doanh": 7 },
-    jobOutlook: "Được Harvard Business Review ví là 'Nghề quyến rũ nhất thế kỷ 21'",
-    universityMajors: ["Khoa học dữ liệu", "Trí tuệ nhân tạo", "Toán tin ứng dụng", "Hệ thống thông tin"],
-    roadmap: []
+    specificJobs: [
+      { id: "recruiter", title: "Chuyên viên tuyển dụng (Recruiter / Headhunter)", description: "Tìm kiếm, sàng lọc ứng viên và phối hợp phỏng vấn để tuyển đúng người cho vị trí cần." },
+      { id: "ld-specialist", title: "Chuyên viên đào tạo & Phát triển (L&D)", description: "Thiết kế chương trình đào tạo, phát triển năng lực và lộ trình sự nghiệp cho nhân viên." },
+      { id: "cb-specialist", title: "Chuyên viên C&B (Lương thưởng & Phúc lợi)", description: "Xây dựng thang bảng lương, chính sách thưởng và quản lý phúc lợi nhân sự." },
+      { id: "hr-manager", title: "Trưởng phòng nhân sự (HR Manager)", description: "Hoạch định chiến lược nhân sự, quản lý đội ngũ HR và tư vấn cho ban lãnh đạo." },
+      { id: "office-admin", title: "Chuyên viên hành chính văn phòng", description: "Quản lý hoạt động văn phòng, hồ sơ, tài sản và hỗ trợ ban lãnh đạo." },
+    ],
+    roadmap: [
+      { id: "p1", title: "Cốt lõi Quản trị Nhân sự", description: "Làm quen với vòng đời nhân sự, chiến lược tạo động lực và các nguyên lý quản trị.", duration: "2-4 tháng", courses: [{ id: "c1", title: "Preparing to Manage Human Resources", platform: "Coursera (University of Minnesota)", url: "https://www.coursera.org/learn/manage-human-resources" }, { id: "c2", title: "Principles of Management", platform: "YouTube", url: "https://www.youtube.com/results?search_query=principles+of+management" }] },
+      { id: "p2", title: "Tuyển dụng & Quản lý Hiệu suất", description: "Học cách phỏng vấn, tuyển chọn nhân tài và xây dựng hệ thống đánh giá KPI/OKR.", duration: "3-5 tháng", courses: [{ id: "c3", title: "Recruiting, Hiring, and Onboarding Employees", platform: "Coursera (University of Minnesota)", url: "https://www.coursera.org/learn/recruiting-hiring-onboarding-employees" }, { id: "c4", title: "Luật Lao Động căn bản", platform: "YouTube", url: "https://www.youtube.com/results?search_query=lu%E1%BA%ADt+lao+%C4%91%E1%BB%99ng+c%C6%A1+b%E1%BA%A3n" }] }
+    ]
   },
   {
     id: "electrical-engineering",
@@ -510,11 +591,15 @@ export const careers: Career[] = [
     requiredSkills: { "Vật lý": 9, "Toán học": 8, "Logic": 8, "Thực hành kỹ thuật": 7 },
     jobOutlook: "Nhu cầu cực lớn trong kỷ nguyên công nghiệp bán dẫn (Chip/Semiconductor) và xe điện.",
     universityMajors: ["Kỹ thuật điện", "Kỹ thuật điện tử viễn thông", "Tự động hóa", "Thiết kế vi mạch"],
+    specificJobs: [
+      { id: "electrical-design", title: "Kỹ sư thiết kế điện", description: "Thiết kế hệ thống phân phối điện, sơ đồ mạch điện, điều khiển tự động hóa cho các công trình, nhà máy, xí nghiệp." },
+      { id: "om-engineer", title: "Kỹ sư vận hành và bảo trì (O&M)", description: "Vận hành, lắp đặt, bảo dưỡng và sửa chữa các thiết bị điện, máy phát điện, trạm biến áp, và hệ thống truyền tải." },
+      { id: "automation-engineer", title: "Kỹ sư điện công nghiệp / Tự động hóa", description: "Làm việc tại các dây chuyền sản xuất, lập trình PLC, SCADA, điều khiển motor và hệ thống tự động trong nhà máy." },
+      { id: "renewable-tech", title: "Chuyên viên kỹ thuật năng lượng tái tạo", description: "Thiết kế, lắp đặt và vận hành hệ thống điện mặt trời, điện gió." },
+      { id: "electrical-sales", title: "Kinh doanh thiết bị điện", description: "Tư vấn, kinh doanh các loại thiết bị điện, vật tư, máy móc điện cho các đại lý hoặc dự án công nghiệp." },
+    ],
     roadmap: [
-      {
-        id: "p1", title: "Nền tảng Kỹ thuật Điện", description: "Nắm vững các định luật vật lý điện từ và linh kiện điện tử cơ bản.", duration: "6 tháng",
-        courses: [{ id: "c1", title: "Circuits and Electronics", platform: "edX (MIT)", url: "https://www.edx.org/learn/electronics" }]
-      }
+      { id: "p1", title: "Nền tảng Kỹ thuật Điện", description: "Nắm vững các định luật vật lý điện từ và linh kiện điện tử cơ bản.", duration: "6 tháng", courses: [{ id: "c1", title: "Circuits and Electronics", platform: "edX (MIT)", url: "https://www.edx.org/learn/electronics" }] }
     ]
   },
   {
@@ -527,11 +612,15 @@ export const careers: Career[] = [
     requiredSkills: { "Vật lý": 10, "Toán học": 9, "Phân tích": 9, "Nghiên cứu": 8 },
     jobOutlook: "Nền tảng vững chắc để học lên Thạc sĩ/Tiến sĩ, hoặc làm việc trong ngành Khoa học dữ liệu và Vật liệu mới.",
     universityMajors: ["Vật lý học", "Vật lý kỹ thuật", "Sư phạm Vật lý", "Khoa học vật liệu"],
+    specificJobs: [
+      { id: "physics-researcher", title: "Nghiên cứu viên vật lý", description: "Thực hiện nghiên cứu cơ bản và ứng dụng về quang học, điện từ, vật lý chất rắn tại trường đại học hoặc viện." },
+      { id: "ic-designer", title: "Kỹ sư thiết kế bán dẫn / Vi mạch (IC Design)", description: "Thiết kế chip và linh kiện bán dẫn — ngành cực hot với sự bùng nổ của công nghệ chip." },
+      { id: "medical-physicist", title: "Chuyên viên Vật lý y tế (Medical Physicist)", description: "Vận hành và hiệu chỉnh thiết bị xạ trị, chụp MRI, CT scan trong bệnh viện." },
+      { id: "photonics-engineer", title: "Kỹ sư quang học / Photonics", description: "Phát triển các thiết bị laser, cảm biến quang học và hệ thống truyền thông quang học." },
+      { id: "physics-lecturer", title: "Giảng viên Vật lý / Gia sư STEM", description: "Giảng dạy Vật lý tại trường đại học hoặc làm gia sư STEM cho học sinh phổ thông." },
+    ],
     roadmap: [
-      {
-        id: "p1", title: "Vật lý đại cương & Toán vi tích phân", description: "Xây dựng tư duy không gian và toán học ứng dụng để giải thích các hiện tượng vật lý.", duration: "1 năm",
-        courses: [{ id: "c1", title: "Classical Mechanics", platform: "MIT OpenCourseWare", url: "https://ocw.mit.edu/courses/physics/" }]
-      }
+      { id: "p1", title: "Vật lý đại cương & Toán vi tích phân", description: "Xây dựng tư duy không gian và toán học ứng dụng để giải thích các hiện tượng vật lý.", duration: "1 năm", courses: [{ id: "c1", title: "Classical Mechanics", platform: "MIT OpenCourseWare", url: "https://ocw.mit.edu/courses/physics/" }] }
     ]
   },
   {
@@ -544,11 +633,15 @@ export const careers: Career[] = [
     requiredSkills: { "Sáng tạo": 9, "Cảm âm": 10, "Thực hành nghệ thuật": 8, "Tự tin": 7 },
     jobOutlook: "Đa dạng cơ hội trong ngành giải trí, truyền thông, quảng cáo và giáo dục.",
     universityMajors: ["Thanh nhạc", "Sáng tác âm nhạc", "Sản xuất âm nhạc", "Sư phạm âm nhạc"],
+    specificJobs: [
+      { id: "singer", title: "Ca sĩ / Nghệ sĩ biểu diễn", description: "Biểu diễn âm nhạc trực tiếp hoặc thu âm, xây dựng fan base và phát hành tác phẩm." },
+      { id: "composer", title: "Nhạc sĩ sáng tác / Nhà soạn nhạc", description: "Viết bài hát, phối khí và sáng tác nhạc phim, quảng cáo, game." },
+      { id: "music-producer", title: "Music Producer / Sound Engineer", description: "Sản xuất âm nhạc trong studio, mix và master âm thanh cho ca sĩ và dự án media." },
+      { id: "music-teacher", title: "Giáo viên âm nhạc", description: "Dạy đàn, thanh nhạc tại trung tâm âm nhạc hoặc trường học." },
+      { id: "music-supervisor", title: "Music Supervisor / Content Creator", description: "Chọn và cấp phép âm nhạc cho phim, TVC, platform streaming; xây dựng kênh âm nhạc online." },
+    ],
     roadmap: [
-      {
-        id: "p1", title: "Nhạc lý cơ bản", description: "Hiểu về nhịp điệu, hợp âm, cách đọc sheet nhạc và luyện tai nghe.", duration: "3-6 tháng",
-        courses: [{ id: "c1", title: "Fundamentals of Music Theory", platform: "Coursera (UoE)", url: "https://www.coursera.org/learn/edinburgh-music-theory" }]
-      }
+      { id: "p1", title: "Nhạc lý cơ bản", description: "Hiểu về nhịp điệu, hợp âm, cách đọc sheet nhạc và luyện tai nghe.", duration: "3-6 tháng", courses: [{ id: "c1", title: "Fundamentals of Music Theory", platform: "Coursera (UoE)", url: "https://www.coursera.org/learn/edinburgh-music-theory" }] }
     ]
   },
   {
@@ -561,11 +654,15 @@ export const careers: Career[] = [
     requiredSkills: { "Sáng tạo": 10, "Thiết kế": 9, "Thẩm mỹ": 9, "Công cụ (Software)": 7 },
     jobOutlook: "Cơ hội việc làm rất lớn trong lĩnh vực Digital Marketing, UI/UX Design và Game.",
     universityMajors: ["Thiết kế đồ họa", "Thiết kế mỹ thuật số", "Hội họa", "Thiết kế thời trang"],
+    specificJobs: [
+      { id: "freelance-artist", title: "Họa sĩ / Artist tự do", description: "Sáng tác tranh, ký họa và bán tác phẩm nghệ thuật qua gallery hoặc nền tảng online." },
+      { id: "concept-artist", title: "Concept Artist / Game Artist", description: "Thiết kế nhân vật, bối cảnh và các yếu tố hình ảnh cho game và phim hoạt hình." },
+      { id: "art-director-art", title: "Giám đốc nghệ thuật (Art Director)", description: "Định hướng phong cách thị giác cho chiến dịch quảng cáo, tạp chí hoặc dự án sáng tạo." },
+      { id: "fashion-designer", title: "Nhà thiết kế thời trang", description: "Sáng tác bộ sưu tập, thiết kế mẫu và giám sát sản xuất quần áo, phụ kiện." },
+      { id: "art-teacher", title: "Giáo viên Mỹ thuật / Workshop Artist", description: "Dạy hội họa, vẽ kỹ thuật tại trường học hoặc tổ chức workshop nghệ thuật cộng đồng." },
+    ],
     roadmap: [
-      {
-        id: "p1", title: "Nền tảng Mỹ thuật & Công cụ", description: "Học quy luật bố cục, màu sắc, Typography và sử dụng thành thạo Adobe Illustrator/Photoshop.", duration: "6 tháng",
-        courses: [{ id: "c1", title: "Graphic Design Specialization", platform: "Coursera (CalArts)", url: "https://www.coursera.org/specializations/graphic-design" }]
-      }
+      { id: "p1", title: "Nền tảng Mỹ thuật & Công cụ", description: "Học quy luật bố cục, màu sắc, Typography và sử dụng thành thạo Adobe Illustrator/Photoshop.", duration: "6 tháng", courses: [{ id: "c1", title: "Graphic Design Specialization", platform: "Coursera (CalArts)", url: "https://www.coursera.org/specializations/graphic-design" }] }
     ]
   },
   {
@@ -578,16 +675,20 @@ export const careers: Career[] = [
     requiredSkills: { "Tư duy phản biện": 10, "Lập luận": 9, "Đọc hiểu": 9, "Viết": 8 },
     jobOutlook: "Nền tảng tư duy xuất sắc để chuyển tiếp lên các bậc cao hơn hoặc làm việc trong ngành Báo chí, Luật sư, Chính trị.",
     universityMajors: ["Triết học", "Chính trị học", "Xã hội học", "Luật"],
+    specificJobs: [
+      { id: "philosophy-researcher", title: "Nghiên cứu viên triết học / Giảng viên", description: "Giảng dạy và nghiên cứu triết học, đạo đức học tại trường đại học." },
+      { id: "ai-ethics", title: "Chuyên viên đạo đức AI (AI Ethics Specialist)", description: "Đánh giá tác động xã hội và đạo đức của các hệ thống AI trong doanh nghiệp công nghệ." },
+      { id: "social-commentator", title: "Nhà báo / Nhà bình luận xã hội", description: "Viết bài phân tích chuyên sâu về xã hội, chính trị và văn hóa cho báo chí." },
+      { id: "strategic-consultant", title: "Chuyên viên tư vấn chiến lược", description: "Tư duy hệ thống và phản biện giúp đề xuất giải pháp chiến lược cho doanh nghiệp." },
+      { id: "mediator", title: "Chuyên gia đàm phán / Hòa giải (Mediator)", description: "Hòa giải tranh chấp thương mại, lao động và dân sự bằng kỹ năng lập luận và thấu hiểu." },
+    ],
     roadmap: [
-      {
-        id: "p1", title: "Lịch sử Triết học cơ bản", description: "Tìm hiểu tư tưởng của các triết gia cổ đại và các luồng tư tưởng hiện đại, rèn luyện cách đặt câu hỏi.", duration: "6 tháng",
-        courses: [{ id: "c1", title: "Introduction to Philosophy", platform: "Coursera (UoE)", url: "https://www.coursera.org/learn/philosophy" }]
-      }
+      { id: "p1", title: "Lịch sử Triết học cơ bản", description: "Tìm hiểu tư tưởng của các triết gia cổ đại và các luồng tư tưởng hiện đại, rèn luyện cách đặt câu hỏi.", duration: "6 tháng", courses: [{ id: "c1", title: "Introduction to Philosophy", platform: "Coursera (UoE)", url: "https://www.coursera.org/learn/philosophy" }] }
     ]
   },
   {
     id: "mathematics",
-    majorName: "mathematics", // Khớp với file data.csv
+    majorName: "mathematics",
     name: "Toán Học / Toán Ứng Dụng",
     description: "Không chỉ là giải phương trình trên giấy, Toán học hiện đại là nền tảng để xây dựng Trí tuệ nhân tạo (AI), phân tích dữ liệu và dự báo kinh tế. Ngành này là 'chân ái' của những bạn có tư duy logic sắc bén (Investigative), thích làm việc với con số và giải quyết các bài toán phức tạp bằng mô hình định lượng.",
     matchingScore: 0,
@@ -595,170 +696,40 @@ export const careers: Career[] = [
     requiredSkills: { "Toán học": 10, "Tư duy Logic": 10, "Phân tích dữ liệu": 8, "Sự kiên nhẫn": 9 },
     jobOutlook: "Nhu cầu khổng lồ trong mảng AI, Data Science và Tài chính định lượng",
     universityMajors: ["Toán ứng dụng", "Toán tin", "Thống kê và Khoa học dữ liệu", "Sư phạm Toán"],
+    specificJobs: [
+      { id: "actuary", title: "Chuyên gia thống kê / Actuary (Chuyên viên bảo hiểm)", description: "Tính toán rủi ro và xây dựng mô hình định phí bảo hiểm, dự báo tài chính." },
+      { id: "data-scientist-math", title: "Nhà khoa học dữ liệu (Data Scientist)", description: "Phân tích dữ liệu lớn, xây dựng mô hình dự báo và AI ứng dụng trong kinh doanh." },
+      { id: "quant", title: "Quantitative Analyst (Quant)", description: "Xây dựng mô hình định lượng phục vụ giao dịch tài chính và quản trị rủi ro ngân hàng." },
+      { id: "ai-researcher", title: "Kỹ sư nghiên cứu AI / ML Researcher", description: "Nghiên cứu thuật toán học máy mới, tối ưu hóa mô hình tại các lab AI lớn." },
+      { id: "math-lecturer", title: "Giảng viên / Gia sư Toán chuyên nghiệp", description: "Giảng dạy toán học tại đại học hoặc dạy IELTS math, SAT, các kỳ thi quốc tế." },
+    ],
     roadmap: [
-      {
-        id: "p1", 
-        title: "Nền tảng Toán học Đại học & Khoa học Dữ liệu", 
-        description: "Làm quen với Giải tích, Đại số tuyến tính và cách ứng dụng Toán học vào lập trình hoặc phân tích dữ liệu (Data Science).", 
-        duration: "3-6 tháng",
-        courses: [
-          { 
-            id: "c1", 
-            title: "Calculus 1 (Giải tích cơ bản)", 
-            platform: "Khan Academy", 
-            url: "https://www.khanacademy.org/math/calculus-1" 
-          },
-          { 
-            id: "c2", 
-            title: "Data Science Math Skills (Toán cho Khoa học dữ liệu)", 
-            platform: "Coursera", 
-            url: "https://www.coursera.org/learn/datasciencemathskills" 
-          }
-        ]
-      }
+      { id: "p1", title: "Nền tảng Toán học Đại học & Khoa học Dữ liệu", description: "Làm quen với Giải tích, Đại số tuyến tính và cách ứng dụng Toán học vào lập trình hoặc phân tích dữ liệu (Data Science).", duration: "3-6 tháng", courses: [{ id: "c1", title: "Calculus 1 (Giải tích cơ bản)", platform: "Khan Academy", url: "https://www.khanacademy.org/math/calculus-1" }, { id: "c2", title: "Data Science Math Skills (Toán cho Khoa học dữ liệu)", platform: "Coursera", url: "https://www.coursera.org/learn/datasciencemathskills" }] }
     ]
   },
   {
     id: "communication",
-    majorName: "communication", // Khớp với file data.csv
+    majorName: "communications",
     name: "Truyền Thông & Quan Hệ Công Chúng (PR)",
-    description: "Nghệ thuật của ngôn từ và sự kết nối. Đây là sân chơi dành cho những bạn hướng ngoại (Social & Enterprising), thích viết lách, sáng tạo nội dung (Artistic), tự tự giao tiếp trước đám đông và có sự nhạy bén tuyệt vời với các xu hướng (trend) của xã hội.",
+    description: "Nghệ thuật của ngôn từ và sự kết nối. Đây là sân chơi dành cho những bạn hướng ngoại (Social & Enterprising), thích viết lách, sáng tạo nội dung (Artistic), tự tin giao tiếp trước đám đông và có sự nhạy bén tuyệt vời với các xu hướng (trend) của xã hội.",
     matchingScore: 0,
     coreSkills: ["Sáng tạo nội dung (Content)", "Giao tiếp công chúng", "Kể chuyện (Storytelling)", "Xử lý khủng hoảng"],
     requiredSkills: { "Giao tiếp": 10, "Viết lách": 9, "Nắm bắt tâm lý": 8, "Sáng tạo linh hoạt": 9 },
     jobOutlook: "Cơ hội rộng mở tại các Agency, Đài truyền hình, Doanh nghiệp lớn",
     universityMajors: ["Truyền thông đa phương tiện", "Quan hệ công chúng (PR)", "Báo chí", "Đông phương học"],
+    specificJobs: [
+      { id: "pr-executive", title: "Chuyên viên Quan hệ Công chúng (PR Specialist)", description: "Xây dựng và duy trì hình ảnh tích cực của tổ chức, xử lý khủng hoảng và viết thông cáo báo chí." },
+      { id: "event-manager", title: "Chuyên viên Tổ chức Sự kiện", description: "Lên ý tưởng, lập kế hoạch và điều phối các sự kiện từ họp báo đến sự kiện âm nhạc quy mô lớn." },
+      { id: "internal-comms", title: "Chuyên viên Truyền thông Nội bộ", description: "Cầu nối gắn kết nhân sự trong công ty, tổ chức các hoạt động văn hóa và truyền tải thông điệp từ ban lãnh đạo." },
+      { id: "media-relations", title: "Chuyên viên Quan hệ Báo chí", description: "Mở rộng và duy trì mạng lưới quan hệ với các nhà báo, đài truyền hình và KOL/Influencer." },
+      { id: "brand-strategist", title: "Chuyên gia Chiến lược Thương hiệu", description: "Nghiên cứu thị trường và định vị thương hiệu, đảm bảo thông điệp truyền thông nhất quán trên mọi nền tảng." },
+    ],
     roadmap: [
-      {
-        id: "p1", 
-        title: "Kỹ năng Viết & Nhập môn Truyền thông", 
-        description: "Khám phá cách xây dựng chiến lược truyền thông, viết thông cáo báo chí và nghệ thuật kể chuyện thu hút người đọc.", 
-        duration: "2-4 tháng",
-        courses: [
-          { 
-            id: "c1", 
-            title: "Introduction to Public Relations and the Media", 
-            platform: "Coursera", 
-            url: "https://www.coursera.org/learn/public-relations" 
-          },
-          { 
-            id: "c2", 
-            title: "Good with Words: Writing and Editing (Kỹ năng viết lách)", 
-            platform: "Coursera", 
-            url: "https://www.coursera.org/learn/writing-editing-words" 
-          }
-        ]
-      }
+      { id: "p1", title: "Kỹ năng Viết & Nhập môn Truyền thông", description: "Khám phá cách xây dựng chiến lược truyền thông, viết thông cáo báo chí và nghệ thuật kể chuyện thu hút người đọc.", duration: "2-4 tháng", courses: [{ id: "c1", title: "Introduction to Public Relations and the Media", platform: "Coursera", url: "https://www.coursera.org/learn/public-relations" }, { id: "c2", title: "Good with Words: Writing and Editing (Kỹ năng viết lách)", platform: "Coursera", url: "https://www.coursera.org/learn/writing-editing-words" }] }
     ]
-  }
+  },
+  
 ];
-
-// ─── BỘ CÂU HỎI TRẮC NGHIỆM ───────────────────────────────────────────────────
-export const personalityQuestions = [
-  // --- 10 CÂU HỎI RIASEC (Cân bằng: Mỗi nhóm xuất hiện đúng 5 lần) ---
-  {
-    id: "q1",
-    question: "Trong học tập hoặc hoạt động ngoại khóa, bạn thích làm gì nhất?",
-    options: [
-      { text: "Thực hành trực tiếp, làm thí nghiệm, tự tay lắp ráp/chế tạo đồ vật", traits: ["R"] },
-      { text: "Đọc sách, tìm hiểu nguyên lý sâu xa, giải quyết các bài toán khó", traits: ["I"] },
-      { text: "Tự do sáng tạo, vẽ vời, thiết kế, viết lách hoặc lên ý tưởng nghệ thuật", traits: ["A"] },
-    ],
-  },
-  {
-    id: "q2",
-    question: "Điều gì làm bạn cảm thấy hào hứng và có động lực nhất?",
-    options: [
-      { text: "Được lắng nghe, giúp đỡ bạn bè và tham gia các hoạt động cộng đồng", traits: ["S"] },
-      { text: "Được dẫn dắt nhóm, tổ chức sự kiện và khẳng định bản lĩnh cá nhân", traits: ["E"] },
-      { text: "Mọi thứ được lên kế hoạch rõ ràng, gọn gàng và hoàn thành đúng hạn", traits: ["C"] },
-    ],
-  },
-  {
-    id: "q3",
-    question: "Tưởng tượng về môi trường đại học lý tưởng của bạn, nó sẽ trông như thế nào?",
-    options: [
-      { text: "Có nhiều buổi đi thực địa ngoài trời hoặc làm việc trong xưởng/phòng lab", traits: ["R"] },
-      { text: "Môi trường thân thiện, hòa đồng, sinh viên thường xuyên tương tác và hỗ trợ nhau", traits: ["S"] },
-      { text: "Môi trường năng động, nhịp độ nhanh, nhiều cuộc thi và thử thách để cạnh tranh", traits: ["E"] },
-    ],
-  },
-  {
-    id: "q4",
-    question: "Khi làm bài tập nhóm trên lớp, bạn thường tự tin nhận vai trò gì?",
-    options: [
-      { text: "Người tìm kiếm tài liệu, nghiên cứu thông tin và phân tích số liệu chuyên sâu", traits: ["I"] },
-      { text: "Người thiết kế slide PowerPoint, làm video hoặc lên kịch bản thuyết trình độc lạ", traits: ["A"] },
-      { text: "Người lập timeline, tổng hợp file Word, chia task và nhắc nhở deadline", traits: ["C"] },
-    ],
-  },
-  {
-    id: "q5",
-    question: "Khi cần học một kỹ năng mới (ví dụ: dùng một phần mềm học tập), thói quen của bạn là gì?",
-    options: [
-      { text: "Bắt tay vào làm thử ngay, vừa làm vừa tự rút kinh nghiệm qua những lỗi sai trong quá trình thực hành.", traits: ["R"] },
-      { text: "Ưu tiên tìm hiểu xem kỹ năng này có mang lại lợi thế gì để giúp mình đạt được kết quả học tập cao hơn không.", traits: ["E"] },
-      { text: "Tìm các video hướng dẫn bài bản, ghi chú cẩn thận và thực hiện tuần tự theo đúng từng bước cơ bản.", traits: ["C"] },
-    ],
-  },  
-  {
-    id: "q6",
-    question: "Nếu nhóm của bạn xảy ra bất đồng ý kiến khi đang bàn kế hoạch, bạn sẽ xử lý thế nào?",
-    options: [
-      { text: "Khuyên mọi người bình tĩnh, tìm cách dung hòa các ý kiến để giữ không khí vui vẻ và đoàn kết.", traits: ["S"] },
-      { text: "Lắng nghe kỹ từng lập luận, phân tích ưu/nhược điểm một cách logic để chỉ ra giải pháp tốt nhất.", traits: ["I"] },
-      { text: "Chuyển hướng sự căng thẳng bằng cách đưa ra một ý tưởng hoàn toàn mới mẻ hoặc một câu nói đùa nhẹ nhàng.", traits: ["A"] },
-    ],
-  },
-  {
-    id: "q7",
-    question: "Sau một tuần học tập căng thẳng, ngày nghỉ cuối tuần của bạn thường diễn ra như thế nào?",
-    options: [
-      { text: "Tham gia các môn thể thao vận động, hoặc tự tay sửa chữa, nâng cấp đồ dùng cá nhân trong phòng.", traits: ["R"] },
-      { text: "Dọn dẹp góc học tập cho gọn gàng, sắp xếp tài liệu và viết danh sách công việc cần làm cho tuần tới.", traits: ["C"] },
-      { text: "Dành thời gian yên tĩnh để nghe nhạc, xem phim, chụp ảnh, vẽ tranh hoặc viết lách theo sở thích.", traits: ["A"] },
-    ],
-  },
-  {
-    id: "q8",
-    question: "Theo bạn, điều gì làm nên sức hút lớn nhất ở một con người?",
-    options: [
-      { text: "Sự tự tin, bản lĩnh dẫn dắt và khát vọng đạt được thành công lớn", traits: ["E"] },
-      { text: "Trí tuệ sâu sắc, hiểu biết rộng và khả năng suy luận nhạy bén", traits: ["I"] },
-      { text: "Lòng nhân ái, sự tử tế và biết cách quan tâm đến những người xung quanh", traits: ["S"] },
-    ],
-  },
-  {
-    id: "q9",
-    question: "Khi đứng trước quyết định chọn ngành, chọn trường Đại học, bạn thường ưu tiên tìm hiểu thông tin theo cách nào?",
-    options: [
-      { text: "Xem các video thực tế về công việc, tham quan cơ sở vật chất để biết sinh viên ngành đó trực tiếp làm nghề như thế nào.", traits: ["R"] },
-      { text: "Tự mình đọc các bài phân tích chuyên môn, nghiên cứu sâu về bản chất của ngành học và những vấn đề mà ngành đó giải quyết.", traits: ["I"] },
-      { text: "Tra cứu kỹ lưỡng về điểm chuẩn các năm, chương trình đào tạo cụ thể và ưu tiên những ngành có cơ hội việc làm ổn định.", traits: ["C"] },
-    ],
-  },
-  {
-    id: "q10",
-    question: "Hãy thử hình dung về bản thân khi đã tốt nghiệp và đi làm, bạn mong muốn sự nghiệp của mình sẽ trông như thế nào?",
-    options: [
-      { text: "Một công việc mang lại giá trị tốt đẹp cho xã hội, nơi bạn được làm việc với con người, giúp đỡ và hỗ trợ người khác.", traits: ["S"] },
-      { text: "Một vị trí có sức ảnh hưởng (quản lý, điều hành), có lộ trình thăng tiến rõ ràng, làm chủ tài chính và dẫn dắt đội nhóm.", traits: ["E"] },
-      { text: "Một công việc linh hoạt, không bị gò bó trong khuôn khổ, cho phép bạn tự do sáng tạo và để lại những dấu ấn cá nhân.", traits: ["A"] },
-    ],
-  },
-  // --- 10 CÂU HỎI TIPI BẮT BUỘC ĐỂ GỬI CHO AI ---
-  { id: "tipi_1", question: "Tôi thấy bản thân mình là người: Hướng ngoại, nhiệt tình.", options: tipiOptions },
-  { id: "tipi_2", question: "Tôi thấy bản thân mình là người: Hay chỉ trích, thích tranh luận.", options: tipiOptions },
-  { id: "tipi_3", question: "Tôi thấy bản thân mình là người: Đáng tin cậy, có kỷ luật tự giác.", options: tipiOptions },
-  { id: "tipi_4", question: "Tôi thấy bản thân mình là người: Hay lo âu, dễ bị buồn bực.", options: tipiOptions },
-  { id: "tipi_5", question: "Tôi thấy bản thân mình là người: Cởi mở với trải nghiệm mới, suy nghĩ phức tạp/sâu sắc.", options: tipiOptions },
-  { id: "tipi_6", question: "Tôi thấy bản thân mình là người: Kín đáo, ít nói.", options: tipiOptions },
-  { id: "tipi_7", question: "Tôi thấy bản thân mình là người: Biết cảm thông, ấm áp.", options: tipiOptions },
-  { id: "tipi_8", question: "Tôi thấy bản thân mình là người: Vô tổ chức, bất cẩn.", options: tipiOptions },
-  { id: "tipi_9", question: "Tôi thấy bản thân mình là người: Bình tĩnh, cảm xúc ổn định.", options: tipiOptions },
-  { id: "tipi_10", question: "Tôi thấy bản thân mình là người: Theo khuôn phép truyền thống, ít sáng tạo.", options: tipiOptions }
-];
-
 // ─── DỮ LIỆU LÀM GIÀU (ENRICHMENT) CHO TỪNG NGÀNH ────────────────────────────
 export const CAREER_ENRICHMENT: Record<string, {
   emoji: string;
@@ -1114,3 +1085,110 @@ export const DEFAULT_ENRICHMENT = {
   companies: ["Các doanh nghiệp hàng đầu trong ngành"],
   funFact: "Sự thành công trong bất kỳ ngành nào đều đến từ đam mê kết hợp với kỹ năng không ngừng phát triển.",
 };
+//───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────//
+//───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────//
+// ─── BỘ CÂU HỎI TRẮC NGHIỆM ───────────────────────────────────────────────────
+export const personalityQuestions = [
+  // --- 10 CÂU HỎI RIASEC (Cân bằng: Mỗi nhóm xuất hiện đúng 5 lần) ---
+  {
+    id: "q1",
+    question: "Trong học tập hoặc hoạt động ngoại khóa, bạn thích làm gì nhất?",
+    options: [
+      { text: "Thực hành trực tiếp, làm thí nghiệm, tự tay lắp ráp/chế tạo đồ vật", traits: ["R"] },
+      { text: "Đọc sách, tìm hiểu nguyên lý sâu xa, giải quyết các bài toán khó", traits: ["I"] },
+      { text: "Tự do sáng tạo, vẽ vời, thiết kế, viết lách hoặc lên ý tưởng nghệ thuật", traits: ["A"] },
+    ],
+  },
+  {
+    id: "q2",
+    question: "Điều gì làm bạn cảm thấy hào hứng và có động lực nhất?",
+    options: [
+      { text: "Được lắng nghe, giúp đỡ bạn bè và tham gia các hoạt động cộng đồng", traits: ["S"] },
+      { text: "Được dẫn dắt nhóm, tổ chức sự kiện và khẳng định bản lĩnh cá nhân", traits: ["E"] },
+      { text: "Mọi thứ được lên kế hoạch rõ ràng, gọn gàng và hoàn thành đúng hạn", traits: ["C"] },
+    ],
+  },
+  {
+    id: "q3",
+    question: "Tưởng tượng về môi trường đại học lý tưởng của bạn, nó sẽ trông như thế nào?",
+    options: [
+      { text: "Có nhiều buổi đi thực địa ngoài trời hoặc làm việc trong xưởng/phòng lab", traits: ["R"] },
+      { text: "Môi trường thân thiện, hòa đồng, sinh viên thường xuyên tương tác và hỗ trợ nhau", traits: ["S"] },
+      { text: "Môi trường năng động, nhịp độ nhanh, nhiều cuộc thi và thử thách để cạnh tranh", traits: ["E"] },
+    ],
+  },
+  {
+    id: "q4",
+    question: "Khi làm bài tập nhóm trên lớp, bạn thường tự tin nhận vai trò gì?",
+    options: [
+      { text: "Người tìm kiếm tài liệu, nghiên cứu thông tin và phân tích số liệu chuyên sâu", traits: ["I"] },
+      { text: "Người thiết kế slide PowerPoint, làm video hoặc lên kịch bản thuyết trình độc lạ", traits: ["A"] },
+      { text: "Người lập timeline, tổng hợp file Word, chia task và nhắc nhở deadline", traits: ["C"] },
+    ],
+  },
+  {
+    id: "q5",
+    question: "Khi cần học một kỹ năng mới (ví dụ: dùng một phần mềm học tập), thói quen của bạn là gì?",
+    options: [
+      { text: "Bắt tay vào làm thử ngay, vừa làm vừa tự rút kinh nghiệm qua những lỗi sai trong quá trình thực hành.", traits: ["R"] },
+      { text: "Ưu tiên tìm hiểu xem kỹ năng này có mang lại lợi thế gì để giúp mình đạt được kết quả học tập cao hơn không.", traits: ["E"] },
+      { text: "Tìm các video hướng dẫn bài bản, ghi chú cẩn thận và thực hiện tuần tự theo đúng từng bước cơ bản.", traits: ["C"] },
+    ],
+  },  
+  {
+    id: "q6",
+    question: "Nếu nhóm của bạn xảy ra bất đồng ý kiến khi đang bàn kế hoạch, bạn sẽ xử lý thế nào?",
+    options: [
+      { text: "Khuyên mọi người bình tĩnh, tìm cách dung hòa các ý kiến để giữ không khí vui vẻ và đoàn kết.", traits: ["S"] },
+      { text: "Lắng nghe kỹ từng lập luận, phân tích ưu/nhược điểm một cách logic để chỉ ra giải pháp tốt nhất.", traits: ["I"] },
+      { text: "Chuyển hướng sự căng thẳng bằng cách đưa ra một ý tưởng hoàn toàn mới mẻ hoặc một câu nói đùa nhẹ nhàng.", traits: ["A"] },
+    ],
+  },
+  {
+    id: "q7",
+    question: "Sau một tuần học tập căng thẳng, ngày nghỉ cuối tuần của bạn thường diễn ra như thế nào?",
+    options: [
+      { text: "Tham gia các môn thể thao vận động, hoặc tự tay sửa chữa, nâng cấp đồ dùng cá nhân trong phòng.", traits: ["R"] },
+      { text: "Dọn dẹp góc học tập cho gọn gàng, sắp xếp tài liệu và viết danh sách công việc cần làm cho tuần tới.", traits: ["C"] },
+      { text: "Dành thời gian yên tĩnh để nghe nhạc, xem phim, chụp ảnh, vẽ tranh hoặc viết lách theo sở thích.", traits: ["A"] },
+    ],
+  },
+  {
+    id: "q8",
+    question: "Theo bạn, điều gì làm nên sức hút lớn nhất ở một con người?",
+    options: [
+      { text: "Sự tự tin, bản lĩnh dẫn dắt và khát vọng đạt được thành công lớn", traits: ["E"] },
+      { text: "Trí tuệ sâu sắc, hiểu biết rộng và khả năng suy luận nhạy bén", traits: ["I"] },
+      { text: "Lòng nhân ái, sự tử tế và biết cách quan tâm đến những người xung quanh", traits: ["S"] },
+    ],
+  },
+  {
+    id: "q9",
+    question: "Khi đứng trước quyết định chọn ngành, chọn trường Đại học, bạn thường ưu tiên tìm hiểu thông tin theo cách nào?",
+    options: [
+      { text: "Xem các video thực tế về công việc, tham quan cơ sở vật chất để biết sinh viên ngành đó trực tiếp làm nghề như thế nào.", traits: ["R"] },
+      { text: "Tự mình đọc các bài phân tích chuyên môn, nghiên cứu sâu về bản chất của ngành học và những vấn đề mà ngành đó giải quyết.", traits: ["I"] },
+      { text: "Tra cứu kỹ lưỡng về điểm chuẩn các năm, chương trình đào tạo cụ thể và ưu tiên những ngành có cơ hội việc làm ổn định.", traits: ["C"] },
+    ],
+  },
+  {
+    id: "q10",
+    question: "Hãy thử hình dung về bản thân khi đã tốt nghiệp và đi làm, bạn mong muốn sự nghiệp của mình sẽ trông như thế nào?",
+    options: [
+      { text: "Một công việc mang lại giá trị tốt đẹp cho xã hội, nơi bạn được làm việc với con người, giúp đỡ và hỗ trợ người khác.", traits: ["S"] },
+      { text: "Một vị trí có sức ảnh hưởng (quản lý, điều hành), có lộ trình thăng tiến rõ ràng, làm chủ tài chính và dẫn dắt đội nhóm.", traits: ["E"] },
+      { text: "Một công việc linh hoạt, không bị gò bó trong khuôn khổ, cho phép bạn tự do sáng tạo và để lại những dấu ấn cá nhân.", traits: ["A"] },
+    ],
+  },
+  // --- 10 CÂU HỎI TIPI BẮT BUỘC ĐỂ GỬI CHO AI ---
+  { id: "tipi_1", question: "Tôi thấy bản thân mình là người: Hướng ngoại, nhiệt tình.", options: tipiOptions },
+  { id: "tipi_2", question: "Tôi thấy bản thân mình là người: Hay chỉ trích, thích tranh luận.", options: tipiOptions },
+  { id: "tipi_3", question: "Tôi thấy bản thân mình là người: Đáng tin cậy, có kỷ luật tự giác.", options: tipiOptions },
+  { id: "tipi_4", question: "Tôi thấy bản thân mình là người: Hay lo âu, dễ bị buồn bực.", options: tipiOptions },
+  { id: "tipi_5", question: "Tôi thấy bản thân mình là người: Cởi mở với trải nghiệm mới, suy nghĩ phức tạp/sâu sắc.", options: tipiOptions },
+  { id: "tipi_6", question: "Tôi thấy bản thân mình là người: Kín đáo, ít nói.", options: tipiOptions },
+  { id: "tipi_7", question: "Tôi thấy bản thân mình là người: Biết cảm thông, ấm áp.", options: tipiOptions },
+  { id: "tipi_8", question: "Tôi thấy bản thân mình là người: Vô tổ chức, bất cẩn.", options: tipiOptions },
+  { id: "tipi_9", question: "Tôi thấy bản thân mình là người: Bình tĩnh, cảm xúc ổn định.", options: tipiOptions },
+  { id: "tipi_10", question: "Tôi thấy bản thân mình là người: Theo khuôn phép truyền thống, ít sáng tạo.", options: tipiOptions }
+];

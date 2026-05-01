@@ -4,11 +4,12 @@ import { calculateHybridScore } from "../utils/scoring";
 import {
   ArrowLeft, TrendingUp, DollarSign, ExternalLink, AlertCircle,
   GraduationCap, Target, CheckCircle, Lightbulb, Building2,
-  Calendar, Award, ChevronDown, Sparkles, Users, Flame,
+  Calendar, Award, ChevronDown, Sparkles, Users, Flame, Briefcase,
 } from "lucide-react";
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from "recharts";
 import { careers, CAREER_ENRICHMENT, DEFAULT_ENRICHMENT } from "../data/careers";
 
+import { SpecificJobPage } from "./SpecificJobPage"; 
 interface AIPrediction { major: string; matchingScore: number; }
 // ─── Score badge color ────────────────────────────────────────────────────────
 function getScoreMeta(score: number) {
@@ -211,7 +212,7 @@ export function JobDetailPage() {
           </div>
         </div>
 
-        {/* ── CAREER PATH ────────────────────────────────────────────────── */}
+        {/* ── CAREER PATH ──────────────────────────────────────────────────
         <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">
           <div className="flex items-center gap-2 mb-5">
             <TrendingUp className="w-5 h-5 text-blue-600" />
@@ -240,7 +241,7 @@ export function JobDetailPage() {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* ── UNIVERSITY MAJORS ──────────────────────────────────────────── */}
         <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">
@@ -263,6 +264,92 @@ export function JobDetailPage() {
             ))}
           </div>
         </div>
+
+       {/* ── SPECIFIC JOBS AFTER GRADUATION ─────────────────────────────── */}
+        {career.specificJobs && career.specificJobs.length > 0 && (
+          <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">
+            <div className="flex items-center gap-2 mb-5">
+              <Briefcase className="w-5 h-5 text-indigo-600" />
+              <h2 className="text-lg font-bold text-gray-900">Các công việc cụ thể sau khi tốt nghiệp 💼</h2>
+            </div>
+
+            <p className="text-sm text-gray-500 mb-6">
+              Sau khi tốt nghiệp, bạn có thể theo đuổi những vị trí công việc đa dạng và hấp dẫn sau:
+            </p>
+
+            <div className="space-y-4">
+              {career.specificJobs.map((job, index) => (
+                <div
+                  key={index}
+                  // 🚀 ĐIỀU HƯỚNG BẰNG ID TRỰC TIẾP TỪ DATA
+                  onClick={() => navigate(`/job/${career.id}/role/${job.id}`)}
+                  className="group relative rounded-2xl p-5 border-2 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+                  style={{
+                    borderColor: index === 0 ? "#c7d2fe" : index === 1 ? "#ddd6fe" : index === 2 ? "#99f6e4" : index === 3 ? "#fed7aa" : "#fecaca",
+                    background: index === 0 ? "#eef2ff" : index === 1 ? "#f5f3ff" : index === 2 ? "#f0fdfa" : index === 3 ? "#fff7ed" : "#fef2f2"
+                  }}
+                >
+                  {/* Job Number Badge */}
+                  <div
+                    className="absolute -top-3 -left-3 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold shadow-md transition-transform group-hover:scale-110"
+                    style={{
+                      background: index === 0 ? "#6366f1" : index === 1 ? "#8b5cf6" : index === 2 ? "#14b8a6" : index === 3 ? "#f59e0b" : "#ef4444"
+                    }}
+                  >
+                    {index + 1}
+                  </div>
+
+                  {/* Job Content */}
+                  <div className="ml-6">
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h3 className="font-bold text-gray-900 text-base leading-tight pr-2 group-hover:text-indigo-700 transition-colors">
+                        {job.title}
+                      </h3>
+
+                      {/* Trending Icon for hot jobs */}
+                      {index < 3 && (
+                        <div className="flex-shrink-0 flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold"
+                          style={{
+                            background: index === 0 ? "#fef3c7" : index === 1 ? "#ddd6fe" : "#d1fae5",
+                            color: index === 0 ? "#92400e" : index === 1 ? "#5b21b6" : "#065f46"
+                          }}
+                        >
+                          <TrendingUp className="w-3 h-3" />
+                          Hot
+                        </div>
+                      )}
+                    </div>
+
+                    <p className="text-sm text-gray-600 leading-relaxed mb-3">
+                      {job.description}
+                    </p>
+                  </div>
+
+                  {/* Hover Effect Indicator */}
+                  <div className="absolute bottom-3 right-4 opacity-0 group-hover:opacity-100 transition-opacity text-xs font-bold"
+                    style={{
+                      color: index === 0 ? "#6366f1" : index === 1 ? "#8b5cf6" : index === 2 ? "#14b8a6" : index === 3 ? "#f59e0b" : "#ef4444"
+                    }}
+                  >
+                    Xem phân tích chi tiết →
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Bottom Note */}
+            <div className="mt-6 rounded-xl p-4 text-center"
+              style={{ background: "linear-gradient(135deg, #eef2ff, #f5f3ff)", border: "2px solid #c7d2fe" }}>
+              <p className="text-sm text-gray-700">
+                <span className="font-bold">💡 Lưu ý:</span> Mức lương có thể thay đổi tùy theo kinh nghiệm, kỹ năng và quy mô công ty.
+                <br />
+                <span className="text-xs text-gray-500 mt-1 inline-block">
+                  Các vị trí này đều có triển vọng phát triển mạnh trong 5-10 năm tới
+                </span>
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* ── CORE SKILLS ────────────────────────────────────────────────── */}
         <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">

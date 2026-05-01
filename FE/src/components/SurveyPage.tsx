@@ -35,22 +35,22 @@ interface PredictPayload {
 const INSIGHT_AFTER: number[] = [4,9,14];
 
 // ─── RIASEC trait mapping ─────────────────────────────────────────────────────
-const TRAIT_TO_RIASEC: Record<string, string> = {
-  "technical": "R", "practical": "R", "hands-on": "R",
-  "analytical": "I", "problem-solving": "I", "studious": "I",
-  "focused": "I", "independent": "I",
-  "creative": "A", "artistic": "A", "innovative": "A", "flexible": "A",
-  "social": "S", "collaborative": "S", "communicative": "S", "dynamic": "S",
-  "leadership": "E", "energetic": "E",
-  "detail-oriented": "C",
-};
+// const TRAIT_TO_RIASEC: Record<string, string> = {
+//   "technical": "R", "practical": "R", "hands-on": "R",
+//   "analytical": "I", "problem-solving": "I", "studious": "I",
+//   "focused": "I", "independent": "I",
+//   "creative": "A", "artistic": "A", "innovative": "A", "flexible": "A",
+//   "social": "S", "collaborative": "S", "communicative": "S", "dynamic": "S",
+//   "leadership": "E", "energetic": "E",
+//   "detail-oriented": "C",
+// };
 
 const RIASEC_META: Record<string, { label: string; desc: string; color: string; bg: string }> = {
   R: { label: "Thực tế (Realistic)",        desc: "Thích làm việc tay chân, kỹ thuật, máy móc",         color: "#16a34a", bg: "#f0fdf4" },
   I: { label: "Nghiên cứu (Investigative)", desc: "Thích khám phá, phân tích, tư duy logic",             color: "#2563eb", bg: "#eff6ff" },
-  A: { label: "Nghệ thuật (Artistic)",      desc: "Thích sáng tạo, biểu đạt, tự do",                    color: "#9333ea", bg: "#faf5ff" },
+  A: { label: "Sáng tạo Nghệ thuật (Artistic)",      desc: "Thích sáng tạo, biểu đạt, tự do",                    color: "#9333ea", bg: "#faf5ff" },
   S: { label: "Xã hội (Social)",            desc: "Thích giúp đỡ người khác, giao tiếp, dạy học",        color: "#ea580c", bg: "#fff7ed" },
-  E: { label: "Doanh nghiệp (Enterprising)",desc: "Thích lãnh đạo, thuyết phục, kinh doanh",           color: "#ca8a04", bg: "#fefce8" },
+  E: { label: "Lãnh đạo (Enterprising)",desc: "Thích lãnh đạo, thuyết phục, kinh doanh",           color: "#ca8a04", bg: "#fefce8" },
   C: { label: "Quy củ (Conventional)",      desc: "Thích trật tự, số liệu, quy trình rõ ràng",           color: "#0891b2", bg: "#ecfeff" },
 };
 
@@ -484,7 +484,7 @@ export function SurveyPage() {
                           
                           {/* Nút giả lập hiệu ứng click vào xem */}
                           <div className="absolute -bottom-10 right-2 group-hover:bottom-2 transition-all duration-300 flex items-center gap-1 text-[10px] font-bold text-purple-600">
-                            Xem Dashboard <ArrowRight className="w-3 h-3" />
+                            Xem Ngành Học<ArrowRight className="w-3 h-3" />
                           </div>
                         </div>
                       ))}
@@ -525,7 +525,9 @@ export function SurveyPage() {
                   </div>
                 ) : (
                   <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
-                    <p className="text-gray-700 leading-relaxed text-sm">{personalityText}</p>
+                    <p className="text-gray-700 leading-relaxed text-sm whitespace-pre-wrap">
+                      {personalityText}
+                    </p>
                   </div>
                 )}
               </div>
