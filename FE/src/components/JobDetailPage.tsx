@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, useLocation } from "react-router";
 import { calculateHybridScore } from "../utils/scoring";
 import {
   ArrowLeft, TrendingUp, DollarSign, ExternalLink, AlertCircle,
@@ -22,6 +22,12 @@ function getScoreMeta(score: number) {
 export function JobDetailPage() {
   const { jobId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const fromDashboard = location.state?.from === "dashboard";
+  const backPath = fromDashboard ? "/dashboard" : "/";
+  const backLabel = fromDashboard ? "Quay lại" : "Quay lại trang chủ";
+
   const [userSkills, setUserSkills] = useState<any[]>([]);
   const [matchingScore, setMatchingScore] = useState(0);
   const [surveyCompleted, setSurveyCompleted] = useState(true);
@@ -60,9 +66,9 @@ export function JobDetailPage() {
         <div className="text-center">
           <p className="text-6xl mb-4">🔍</p>
           <h2 className="text-2xl font-bold mb-4 text-gray-700">Không tìm thấy ngành này</h2>
-          <button onClick={() => navigate("/dashboard")}
+          <button onClick={() => navigate(backPath)}
             className="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium">
-            ← Quay lại Dashboard
+            ← {backLabel}
           </button>
         </div>
       </div>
@@ -110,10 +116,10 @@ export function JobDetailPage() {
       <div className="max-w-4xl mx-auto px-4 py-8">
 
         {/* Back */}
-        <button onClick={() => navigate("/dashboard")}
+        <button onClick={() => navigate(backPath)}
           className="flex items-center gap-2 text-gray-500 hover:text-gray-800 mb-6 text-sm font-medium transition-colors group">
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Quay lại Dashboard
+          {backLabel}
         </button>
 
         {/* ── HERO CARD ──────────────────────────────────────────────────── */}

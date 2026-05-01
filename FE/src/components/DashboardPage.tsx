@@ -164,7 +164,7 @@ export function DashboardPage() {
 
                 <button
                   disabled={!career.isFound}
-                  onClick={() => navigate(`/job/${career.id}`)}
+                  onClick={() => navigate(`/job/${career.id}`, { state: { from: 'dashboard' } })}
                   className={`w-full py-3 rounded-lg transition-all flex items-center justify-center gap-2 font-semibold text-sm
                     ${career.isFound
                       ? "bg-blue-600 text-white hover:bg-blue-700 active:scale-95"
