@@ -21,7 +21,7 @@ print("Đang khởi động hệ thống phân tích nghề nghiệp...")
 
 # --- CẤU HÌNH TẢI MÔ HÌNH TỪ GOOGLE DRIVE ---
 # Bạn dán ID của file Google Drive vào giữa 2 dấu ngoặc kép bên dưới
-FILE_ID = "1pIXlcqsNGWj118sT10hshvhE3c0GWp4y" 
+# FILE_ID = "1pIXlcqsNGWj118sT10hshvhE3c0GWp4y" 
 MODEL_PATH = "career_model.pkl"
 
 # Hệ thống tự động kiểm tra xem máy chủ đã tải file này về chưa
