@@ -1,3 +1,5 @@
+import os
+import gdown
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, field_validator
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,13 +19,32 @@ app.add_middleware(
 
 print("Đang khởi động hệ thống phân tích nghề nghiệp...")
 
-# Load Model và Metadata
+# --- CẤU HÌNH TẢI MÔ HÌNH TỪ GOOGLE DRIVE ---
+# Bạn dán ID của file Google Drive vào giữa 2 dấu ngoặc kép bên dưới
+FILE_ID = "1k82YfaKeo1vC31nxQD7Zv9Rcpa9QHv6b" 
+MODEL_PATH = "career_model.pkl"
+
+# Hệ thống tự động kiểm tra xem máy chủ đã tải file này về chưa
+if not os.path.exists(MODEL_PATH):
+    print(f"Đang tải mô hình {MODEL_PATH} từ Google Drive. Vui lòng đợi...")
+    try:
+        url = f'https://drive.google.com/uc?id={FILE_ID}'
+        # Hàm download sẽ tự động lưu file vào MODEL_PATH
+        gdown.download(url, MODEL_PATH, quiet=False)
+        print("Đã tải mô hình thành công!")
+    except Exception as e:
+        print(f"⚠️ LỖI khi tải file từ Google Drive: {e}")
+
+# --- Load Model và Metadata ---
 try:
-    model = joblib.load('career_model.pkl')
+    model = joblib.load(MODEL_PATH)
     with open('model_metadata.json', 'r', encoding='utf-8') as f:
         META = json.load(f)
+    print("Sẵn sàng phân tích nghề nghiệp! Hệ thống đã chạy thành công.")
 except Exception as e:
     print(f"⚠️ LỖI: Không thể tải mô hình. Chi tiết: {e}")
+
+# ... (bên dưới là các đoạn code định nghĩa các API (app.get, app.post) của bạn, hãy giữ nguyên nhé) ...
 
 # ==========================================
 # 1. CẤU TRÚC DỮ LIỆU (SCHEMAS)
@@ -176,26 +197,26 @@ def generate_insight(req: InsightRequest):
     all_majors_results = []
     
     # 3. Lặp qua toàn bộ 28 ngành
-    print("=== DANH SÁCH 28 NGÀNH VÀ ĐỘ PHÙ HỢP ===")
-    for i in all_indices:
-        # Lấy tên tiếng Anh từ model
-        major_en = model.classes_[i].title()
+    # print("=== DANH SÁCH 28 NGÀNH VÀ ĐỘ PHÙ HỢP ===")
+    # for i in all_indices:
+    #     # Lấy tên tiếng Anh từ model
+    #     major_en = model.classes_[i].title()
         
-        # Dịch sang tiếng Việt bằng Dict
-        # major_vi = MAJOR_VI_DICT.get(major_en, major_en)
+    #     # Dịch sang tiếng Việt bằng Dict
+    #     # major_vi = MAJOR_VI_DICT.get(major_en, major_en)
         
-        # Lấy xác suất và nhân 100 để ra phần trăm
-        prob_percent = probs[i] * 100 
+    #     # Lấy xác suất và nhân 100 để ra phần trăm
+    #     prob_percent = probs[i] * 100 
         
-        # In thẳng ra màn hình console (Terminal)
-        print(f"{major_en}: {prob_percent:.2f}%")
+    #     # In thẳng ra màn hình console (Terminal)
+    #     print(f"{major_en}: {prob_percent:.2f}%")
         
-        # Lưu vào list dưới dạng Dictionary (Cực kỳ hữu ích nếu bạn muốn trả về cho React Frontend)
-        all_majors_results.append({
-            "majorName": major_en,
-            "name": major_en,
-            "matchingScore": round(prob_percent, 2)
-        })
+    #     # Lưu vào list dưới dạng Dictionary (Cực kỳ hữu ích nếu bạn muốn trả về cho React Frontend)
+    #     all_majors_results.append({
+    #         "majorName": major_en,
+    #         "name": major_en,
+    #         "matchingScore": round(prob_percent, 2)
+    #     })
 
     # Nếu bạn đang viết API (ví dụ Flask/FastAPI), bạn có thể return biến all_majors_results này:
     # return jsonify(all_majors_results)
