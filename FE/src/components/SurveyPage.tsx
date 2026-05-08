@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import { X, Plus, ChevronRight, ChevronLeft, Loader2, Sparkles, Brain, Target, ArrowRight } from "lucide-react";
+import { X, Plus, ChevronRight, ChevronLeft, Loader2, Sparkles, Brain, Target, ArrowRight, Home } from "lucide-react";
 import { personalityQuestions, careers } from "../data/careers";
 import { useLocation } from "react-router";
 
@@ -347,11 +347,24 @@ export function SurveyPage() {
         <div className="max-w-2xl mx-auto">
 
           {/* Header */}
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold mb-1">Khảo Sát Định Hướng Nghề Nghiệp</h1>
-            <p className="text-gray-500 text-sm">AI phân tích tính cách và gợi ý ngành phù hợp</p>
-          </div>
+          <div className="mb-6">
+            {/* Nút Trang chủ đặt ở trên cùng bên PHẢI */}
+            <div className="mb-4 flex justify-end">
+              <button 
+                onClick={() => navigate("/")}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-600 hover:text-blue-600 hover:border-blue-300 hover:shadow-md transition-all text-sm"
+              >
+                <Home className="w-4 h-4" />
+                <span className="hidden sm:inline">Trang chủ</span>
+              </button>
+            </div>
 
+            {/* Tiêu đề căn giữa độc lập */}
+            <div className="text-center">
+              <h1 className="text-3xl font-bold mb-1">Khảo Sát Định Hướng Nghề Nghiệp</h1>
+              <p className="text-gray-500 text-sm">AI phân tích tính cách và gợi ý ngành phù hợp</p>
+            </div>
+          </div>
           {/* Progress */}
           <div className="mb-6">
             <div className="flex justify-between text-xs text-gray-400 mb-1">

@@ -13,7 +13,7 @@ export function LandingPage() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
   // 1. Hàm xử lý điều hướng
   const handleCareerClick = (id: string) => {
-    navigate(`/job/${id}`, { state: { from: 'landing' } }); 
+    navigate(`/job/${id}`, { state: { from: '/' } }); 
   };
 
   // 2. Thêm trường 'id' vào tất cả các ngành
@@ -425,7 +425,7 @@ export function LandingPage() {
             className="mb-32"
           >
             <div className="text-center mb-16">
-              <h2 className="text-5xl md:text-6xl font-extrabold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <h2 className="text-5xl md:text-6xl font-extrabold mb-4 pb-2 leading-normal bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                 Nghề Nghiệp Hot
               </h2>
               <p className="text-xl text-gray-600">

@@ -200,17 +200,31 @@ def generate_insight(req: InsightRequest):
     # Nếu bạn đang viết API (ví dụ Flask/FastAPI), bạn có thể return biến all_majors_results này:
     # return jsonify(all_majors_results)
     if not req.isFinal:
-        # Nhận xét tạm thời (Giữa bài test)
-        insight = f"✨ Phân tích sơ bộ: Qua {req.answeredCount} câu hỏi đầu tiên, AI nhận thấy bạn đang bộc lộ thiên hướng rõ rệt của nhóm {TRAIT_NAMES.get(top1_code)}.\n\n"
-        insight += f"Dựa trên các chỉ số hiện tại, bạn tỏ ra rất tiềm năng khi theo đuổi các lĩnh vực như {majors_text}. "
-        
-        if req.bigFive:
-            if req.bigFive.Openness >= 5.0:
-                insight += "Sự cởi mở với những trải nghiệm mới là điểm cộng lớn của bạn. "
-            elif req.bigFive.Conscientiousness >= 5.0:
-                insight += "Bạn cũng đang cho thấy sự tập trung và kỷ luật rất đáng khen ngợi. "
+        # --- CHIA LÀM 2 GIAI ĐOẠN NHẬN XÉT SƠ BỘ ---
+        if req.answeredCount <= 10:
+            # Giai đoạn 1 (<= 10 câu): Nhận xét thiên về RIASEC (Sở thích nghề nghiệp)
+            insight = f"✨ Phân tích sơ bộ: Qua {req.answeredCount} câu hỏi đầu tiên, AI nhận thấy bạn đang bộc lộ thiên hướng rõ rệt của nhóm {TRAIT_NAMES.get(top1_code)}.\n\n"
+            insight += f"Dựa trên các chỉ số hiện tại, bạn tỏ ra rất tiềm năng khi theo đuổi các lĩnh vực như {majors_text}. "
+            insight += "Hãy tiếp tục để hệ thống bắt đầu phân tích thêm về các nét tính cách sâu bên trong của bạn nhé!"
+            
+        else:
+            # Giai đoạn 2 (> 10 câu): Nhận xét thiên về TIPI (Big Five - Tính cách cốt lõi)
+            insight = f"✨ Khám phá tính cách: Qua {req.answeredCount} câu hỏi, các đặc điểm tính cách cốt lõi của bạn đang dần lộ diện rõ nét hơn.\n\n"
+            
+            if req.bigFive:
+                # Đưa ra 1-2 nhận xét nhanh về các chỉ số nổi bật nhất của Big Five
+                if req.bigFive.Extraversion >= 5.0:
+                    insight += "Bạn đang thể hiện một nguồn năng lượng hướng ngoại, cởi mở và dễ dàng kết nối với mọi người xung quanh. "
+                elif req.bigFive.Extraversion < 4.0:
+                    insight += "Bạn đang cho thấy xu hướng nội tâm, điềm tĩnh và có khả năng làm việc độc lập với độ tập trung cao. "
                 
-        insight += "Hãy tiếp tục hoàn thành các câu hỏi còn lại để nhận được kết quả phân tích đầy đủ nhất nhé!"
+                if req.bigFive.Conscientiousness >= 5.0:
+                    insight += "Đặc biệt, sự tỉ mỉ, kỷ luật và có trách nhiệm của bạn là một điểm sáng rất tuyệt vời. "
+                elif req.bigFive.Openness >= 5.0:
+                    insight += "Sự sáng tạo và cởi mở với những trải nghiệm mới mẻ cũng là một thế mạnh lớn của bạn. "
+
+            insight += f"\n\nSự kết hợp giữa tính cách này và thiên hướng {TRAIT_NAMES.get(top1_code)} sẽ mở ra cơ hội rất tốt trong các ngành như {majors_text}. "
+            insight += "Chỉ còn vài câu hỏi nữa thôi, hãy hoàn thành nốt để nhận báo cáo tổng thể nhé!"
         
     else:
         # Nhận xét cuối cùng (Chốt kết quả)

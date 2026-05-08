@@ -7,7 +7,9 @@ import {
   Briefcase, LineChart, HeartPulse, Stethoscope, Activity, PenTool, 
   Smartphone, Lock, Monitor, FlaskConical, CheckCircle, Settings, 
   ShieldAlert, Leaf, Zap, Sun, Battery, Home, Palette, Layers, Box, 
-  Map, Hammer, Globe, MapPin, Sparkles, ArrowLeft, Lightbulb, BookOpen, Truck
+  Map, Hammer, Globe, MapPin, Sparkles, ArrowLeft, Lightbulb, Truck,
+  Beaker, TestTube, Microscope,  Atom, Hexagon,  ShieldCheck, Pill, 
+  ClipboardCheck, Factory, TriangleAlert, BookOpen, GraduationCap
 } from "lucide-react";
 
 export const MOCK_JOB_DATA: Record<string, any> = {
@@ -3742,6 +3744,138 @@ export const MOCK_JOB_DATA: Record<string, any> = {
     actionPlan: {
       projects: ["Thử phân tích mô hình SWOT và Brand Archetype (Hình mẫu thương hiệu) của một nhãn hàng", "Đọc các báo cáo của Nielsen, Kantar"],
       interviewPrep: "Tư duy logic hệ thống kết hợp với sự sáng tạo, khả năng thuyết trình bằng slide thuyết phục (Pitching).",
+    },
+  },
+// ==========================================
+// 34. HÓA HỌC & KỸ THUẬT HÓA HỌC
+// ==========================================
+  "lab-analyst": {
+    title: "Chuyên viên phân tích hóa học (Lab Analyst)",
+    parentMajor: "Hóa Học & Kỹ Thuật Hóa Học",
+    description: "Phân tích thành phần hóa học của nguyên liệu và sản phẩm trong phòng thí nghiệm. Đóng vai trò như 'đôi mắt' của nhà máy để xác định độ tinh khiết và thành phần chất lượng.",
+    stats: { salary: "10 - 25 Triệu", growth: "+15% (Ổn định)", environment: "Phòng thí nghiệm (Lab)" },
+    techStack: [
+      { name: "Sắc ký (HPLC/GC)",   icon: <Activity size={14} />,     color: "bg-blue-100 text-blue-700" },
+      { name: "Quang phổ (UV-Vis)", icon: <Microscope size={14} />,   color: "bg-purple-100 text-purple-700" },
+      { name: "Chuẩn độ hóa học",   icon: <TestTube size={14} />,     color: "bg-teal-100 text-teal-700" },
+      { name: "Xử lý mẫu (Prep)",   icon: <Beaker size={14} />,       color: "bg-orange-100 text-orange-700" },
+    ],
+    funFacts: [
+      { title: "Làm bạn với máy móc tiền tỷ", description: "Các hệ thống sắc ký lỏng hiệu năng cao (HPLC) trong phòng lab phân tích thường có giá trị ngang với một chiếc ô tô siêu sang." },
+      { title: "Sự thật nằm ở con số", description: "Dù sản phẩm nhìn bằng mắt thường có đẹp đến đâu, Lab Analyst chỉ tin vào nồng độ % hiển thị trên phần mềm phân tích." },
+    ],
+    progression: [
+      { level: "Junior Analyst",  exp: "0 - 2 năm", role: "Chuẩn bị mẫu, pha hóa chất và vận hành các thiết bị đo lường cơ bản." },
+      { level: "Senior Analyst",  exp: "2 - 5 năm", role: "Vận hành máy móc phức tạp, bảo trì thiết bị và xử lý dữ liệu phân tích khó." },
+      { level: "Lab Manager",     exp: "5+ năm",    role: "Quản lý toàn bộ phòng lab, chịu trách nhiệm phê duyệt kết quả cuối cùng." },
+    ],
+    actionPlan: {
+      projects: ["Thực hành pha các dung dịch chuẩn", "Tập đọc và phân tích biểu đồ phổ sắc ký"],
+      interviewPrep: "Ôn lại kỹ thuật chuẩn độ, nguyên lý hoạt động của máy HPLC và quy tắc an toàn phòng thí nghiệm (GLP).",
+    },
+  },
+
+  "materials-researcher": {
+    title: "Kỹ sư nghiên cứu vật liệu mới",
+    parentMajor: "Hóa Học & Kỹ Thuật Hóa Học",
+    description: "Nghiên cứu và phát triển vật liệu polymer, composite, nanomaterial cho công nghiệp. Chìa khóa tạo ra các sản phẩm nhẹ hơn, bền vững hơn và thân thiện với môi trường.",
+    stats: { salary: "15 - 40+ Triệu", growth: "+25% (Rất cao)", environment: "R&D Lab / Tập đoàn lớn" },
+    techStack: [
+      { name: "Vật liệu Nano",      icon: <Atom size={14} />,         color: "bg-indigo-100 text-indigo-700" },
+      { name: "Hóa học Polymer",    icon: <Hexagon size={14} />,      color: "bg-rose-100 text-rose-700" },
+      { name: "Đánh giá cơ lý tính",icon: <Layers size={14} />,       color: "bg-emerald-100 text-emerald-700" },
+      { name: "Kính hiển vi điện tử",icon: <Microscope size={14} />,  color: "bg-slate-100 text-slate-700" },
+    ],
+    funFacts: [
+      { title: "Phát minh từ sự tình cờ", description: "Nhiều vật liệu mang tính cách mạng như Teflon (chống dính chảo) hay Nhựa dính Post-it đều được tìm ra do lỗi vô tình trong lúc làm thí nghiệm." },
+      { title: "Cuộc đua Pin xe điện", description: "Hiện nay, kỹ sư vật liệu đang được trả lương cực khủng để tìm ra loại hóa chất giúp pin xe điện sạc nhanh hơn và đi xa hơn." },
+    ],
+    progression: [
+      { level: "R&D Assistant",    exp: "0 - 2 năm", role: "Hỗ trợ thí nghiệm, ghi chép số liệu tổng hợp vật liệu mẫu." },
+      { level: "Material Engineer",exp: "2 - 6 năm", role: "Tự chủ trì công thức mới, cải tiến tính chất vật liệu để giảm giá thành." },
+      { level: "R&D Director",     exp: "6+ năm",    role: "Định hướng chiến lược phát triển sản phẩm công nghệ cao cho cả tập đoàn." },
+    ],
+    actionPlan: {
+      projects: ["Tìm hiểu về quy trình tái chế nhựa sinh học (Bioplastic)", "Nghiên cứu ứng dụng của Graphene"],
+      interviewPrep: "Kiến thức về liên kết hóa học, cấu trúc vật liệu rắn và kỹ năng đọc tài liệu tiếng Anh chuyên ngành (Paper).",
+    },
+  },
+
+  "qc-pharma": {
+    title: "Chuyên viên kiểm soát chất lượng dược phẩm (QC Pharma)",
+    parentMajor: "Hóa Học & Kỹ Thuật Hóa Học",
+    description: "Đảm bảo thuốc sản xuất đạt tiêu chuẩn GMP của Bộ Y tế và quốc tế. Trách nhiệm cao nhất bảo vệ sức khỏe người tiêu dùng trước khi sản phẩm ra thị trường.",
+    stats: { salary: "12 - 35 Triệu", growth: "+20% (Cao)", environment: "Phòng Lab vô trùng / Nhà máy" },
+    techStack: [
+      { name: "Tiêu chuẩn GMP",     icon: <ShieldCheck size={14} />,  color: "bg-green-100 text-green-700" },
+      { name: "Kiểm nghiệm Thuốc",  icon: <Pill size={14} />,         color: "bg-pink-100 text-pink-700" },
+      { name: "Thẩm định quy trình",icon: <ClipboardCheck size={14} />,color: "bg-cyan-100 text-cyan-700" },
+      { name: "Kiểm nghiệm Vi sinh",icon: <Activity size={14} />,     color: "bg-fuchsia-100 text-fuchsia-700" },
+    ],
+    funFacts: [
+      { title: "Không có chỗ cho chữ 'Khoảng'", description: "Trong ngành Dược, một sai số 0.01% cũng có thể khiến toàn bộ lô thuốc trị giá hàng tỷ đồng bị mang đi tiêu hủy." },
+      { title: "Quyền sinh sát", description: "QC là bộ phận duy nhất trong nhà máy có quyền đình chỉ lập tức dây chuyền sản xuất nếu phát hiện có nguy cơ nhiễm chéo hóa chất." },
+    ],
+    progression: [
+      { level: "QC Staff",         exp: "0 - 3 năm", role: "Thực hiện các test lý hóa, độ hòa tan, độ ẩm của viên thuốc." },
+      { level: "QC Supervisor",    exp: "3 - 7 năm", role: "Giám sát quy trình kiểm nghiệm, xử lý các sự cố kết quả ngoài khoảng chuẩn (OOS)." },
+      { level: "QA/QC Manager",    exp: "7+ năm",    role: "Chịu trách nhiệm toàn bộ hệ thống chất lượng, làm việc trực tiếp với thanh tra Bộ Y tế." },
+    ],
+    actionPlan: {
+      projects: ["Đọc và hiểu Pharmacopoeia (Dược điển)", "Tìm hiểu về vòng đời của một viên thuốc từ R&D đến khi ra hiệu thuốc"],
+      interviewPrep: "Nắm vững 5 nguyên tắc cơ bản của GMP, GLP và cách giải quyết khi kết quả phân tích bị sai lệch.",
+    },
+  },
+
+  "chemical-production": {
+    title: "Kỹ sư sản xuất hóa chất công nghiệp",
+    parentMajor: "Hóa Học & Kỹ Thuật Hóa Học",
+    description: "Vận hành và cải tiến quy trình sản xuất các sản phẩm hóa chất (sơn, mực in, hóa mỹ phẩm). Chuyển đổi công thức từ phòng thí nghiệm quy mô nhỏ sang sản xuất hàng loạt.",
+    stats: { salary: "15 - 50 Triệu", growth: "+15% (Ổn định)", environment: "Nhà máy / Khu công nghiệp" },
+    techStack: [
+      { name: "Kỹ thuật phản ứng",  icon: <Factory size={14} />,      color: "bg-gray-200 text-gray-800" },
+      { name: "Tối ưu quy trình",   icon: <Settings size={14} />,     color: "bg-blue-100 text-blue-700" },
+      { name: "An toàn HSE",        icon: <TriangleAlert size={14} />,color: "bg-amber-100 text-amber-700" },
+      { name: "Cân bằng vật chất",  icon: <Hexagon size={14} />,      color: "bg-sky-100 text-sky-700" },
+    ],
+    funFacts: [
+      { title: "Từ miligam đến hàng tấn", description: "Một phản ứng hóa học xảy ra êm đẹp trong cốc thủy tinh 100ml có thể gây nổ tung nếu mang đi nấu trong bồn chứa 10,000 Lít mà không tính toán tản nhiệt." },
+      { title: "Nấu ăn phiên bản công nghiệp", description: "Về bản chất, kỹ sư sản xuất giống như một siêu đầu bếp, phải canh nhiệt độ, áp suất và tốc độ khuấy trộn sao cho 'món ăn' ra lò hoàn hảo nhất." },
+    ],
+    progression: [
+      { level: "Process Engineer", exp: "0 - 3 năm", role: "Giám sát thông số trên hệ thống SCADA, hỗ trợ khắc phục sự cố rò rỉ, kẹt bơm." },
+      { level: "Shift Leader",     exp: "3 - 6 năm", role: "Quản lý ca sản xuất, điều phối công nhân và đảm bảo tiến độ ra hàng." },
+      { level: "Plant Manager",    exp: "6+ năm",    role: "Giám đốc nhà máy, quản lý chi phí vận hành, an toàn và hiệu suất toàn xưởng." },
+    ],
+    actionPlan: {
+      projects: ["Sử dụng phần mềm Aspen Plus/HYSYS mô phỏng quá trình chưng cất", "Thiết kế một sơ đồ công nghệ (PFD) đơn giản"],
+      interviewPrep: "Hiểu về các thiết bị truyền nhiệt, truyền chất, bơm, van và cách xử lý khi hóa chất bị tràn ra ngoài.",
+    },
+  },
+
+  "chemistry-lecturer": {
+    title: "Giảng viên / Nghiên cứu viên Hóa học",
+    parentMajor: "Hóa Học & Kỹ Thuật Hóa Học",
+    description: "Giảng dạy và thực hiện các đề tài nghiên cứu khoa học tại trường đại học hoặc viện. Truyền cảm hứng và đào tạo thế hệ kỹ sư hóa học, nhà khoa học tương lai.",
+    stats: { salary: "15 - 45+ Triệu", growth: "+10% (Đặc thù)", environment: "Trường Đại học / Viện Hàn lâm" },
+    techStack: [
+      { name: "Thiết kế thí nghiệm",icon: <FlaskConical size={14} />, color: "bg-violet-100 text-violet-700" },
+      { name: "Kỹ năng sư phạm",    icon: <BookOpen size={14} />,     color: "bg-rose-100 text-rose-700" },
+      { name: "Viết báo khoa học",  icon: <PenTool size={14} />,      color: "bg-stone-100 text-stone-700" },
+      { name: "Phân tích dữ liệu",  icon: <Activity size={14} />,     color: "bg-emerald-100 text-emerald-700" },
+    ],
+    funFacts: [
+      { title: "Quyền lực của bài báo ISI", description: "Trong giới hàn lâm, 'Publish or Perish' (Xuất bản báo khoa học hoặc lụi tàn) là khẩu hiệu sống còn để được phong hàm và cấp kinh phí nghiên cứu." },
+      { title: "Bắt trend thế giới", description: "Các nghiên cứu viên là những người cập nhật xu hướng nhanh nhất, họ có thể đang nghiên cứu pin hydro hoặc nhựa phân hủy sinh học trước khi thị trường kịp biết tới nó." },
+    ],
+    progression: [
+      { level: "Trợ giảng / Thạc sĩ",exp: "0 - 3 năm", role: "Hướng dẫn sinh viên làm thí nghiệm, chấm điểm và chạy số liệu cho các đề tài lớn." },
+      { level: "Tiến sĩ / Giảng viên",exp: "3 - 8 năm", role: "Đứng lớp giảng dạy, chủ nhiệm các đề tài nghiên cứu cấp trường/cấp bộ." },
+      { level: "PGS. Tiến sĩ",      exp: "8+ năm",    role: "Định hướng mảng nghiên cứu mũi nhọn, hợp tác quốc tế và chuyển giao công nghệ cho doanh nghiệp." },
+    ],
+    actionPlan: {
+      projects: ["Thực hiện đồ án tốt nghiệp xuất sắc để xin học bổng Thạc sĩ", "Viết một bài tổng quan tài liệu (Literature Review)"],
+      interviewPrep: "Nền tảng lý thuyết hóa học cực kỳ vững chắc, IELTS học thuật từ 6.5+ và kỹ năng thuyết trình trước hội đồng.",
     },
   }
 };

@@ -23,14 +23,14 @@ export function JobDetailPage() {
   const { jobId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-
+  const isInterim = localStorage.getItem("surveyIsInterim") === "true";
   const fromDashboard = location.state?.from === "dashboard";
   const backPath = fromDashboard ? "/dashboard" : "/";
   const backLabel = fromDashboard ? "Quay lại" : "Quay lại trang chủ";
-
+  const [isEarlySubmitted, setIsEarlySubmitted] = useState(false);
   const [userSkills, setUserSkills] = useState<any[]>([]);
   const [matchingScore, setMatchingScore] = useState(0);
-  const [surveyCompleted, setSurveyCompleted] = useState(true);
+  const [surveyCompleted, setSurveyCompleted] = useState(false);
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
 
@@ -44,8 +44,9 @@ export function JobDetailPage() {
     const parsedSkills = skillsData ? JSON.parse(skillsData) : [];
     setUserSkills(parsedSkills);
 
-    const completed = localStorage.getItem("surveyCompleted");
-    setSurveyCompleted(completed !== "false");
+    // const completed = localStorage.getItem("surveyCompleted");
+    // setSurveyCompleted(completed === "true");
+    // setIsEarlySubmitted(interim === "true");
 
     let aiScore = career.matchingScore || 0;
     const predictionsData = localStorage.getItem("aiPredictions");
@@ -98,14 +99,14 @@ export function JobDetailPage() {
     <div className="min-h-screen" style={{ background: "linear-gradient(135deg, #f0f4ff 0%, #fafafa 50%, #f5f0ff 100%)" }}>
 
       {/* ── INCOMPLETE SURVEY BANNER ─────────────────────────────────────── */}
-      {!surveyCompleted && (
+      {fromDashboard && isInterim && (
         <div className="sticky top-0 z-50 bg-gradient-to-r from-amber-400 to-orange-400 text-white py-2.5 px-4 shadow-md">
           <div className="max-w-4xl mx-auto flex items-center justify-between gap-4">
             <p className="text-sm font-medium flex items-center gap-2">
               <Sparkles className="w-4 h-4 flex-shrink-0" />
               Đây là kết quả <strong>sơ bộ</strong> sau vài câu hỏi. Hoàn thành bài test để nhận phân tích chính xác hơn!
             </p>
-            <button onClick={() => navigate("/survey")}
+            <button onClick={() => navigate("/survey", { state: { resume: true } })}
               className="flex-shrink-0 px-4 py-1.5 bg-white text-orange-600 rounded-lg text-sm font-bold hover:bg-orange-50 transition-colors">
               Làm tiếp →
             </button>
@@ -148,6 +149,7 @@ export function JobDetailPage() {
               </div>
 
               {/* Score ring */}
+              {fromDashboard &&(
               <div className="flex-shrink-0 text-center">
                 <div className="relative w-20 h-20">
                   <svg className="w-20 h-20 -rotate-90" viewBox="0 0 80 80">
@@ -165,7 +167,9 @@ export function JobDetailPage() {
                 </div>
                 <p className="text-[10px] font-semibold mt-1" style={{ color: scoreMeta.color }}>{scoreMeta.label}</p>
               </div>
+              )}       
             </div>
+            
 
             {/* Tagline */}
             <p className="text-gray-500 italic text-sm mb-4">"{enrichment.tagline}"</p>
@@ -413,7 +417,7 @@ export function JobDetailPage() {
         )}
 
         {/* ── SKILL GAPS ─────────────────────────────────────────────────── */}
-        {skillGaps.length > 0 && (
+        { !isInterim && fromDashboard && skillGaps.length > 0 && (
           <div className="bg-white rounded-3xl shadow-sm p-6 mb-6">
             <div className="flex items-center gap-2 mb-5">
               <AlertCircle className="w-5 h-5 text-amber-500" />
@@ -516,12 +520,12 @@ export function JobDetailPage() {
               : "Hoàn thành bài test để nhận phân tích đầy đủ và chính xác hơn cho ngành này."}
           </p>
           <div className="flex gap-3 justify-center flex-wrap">
-            <button onClick={() => navigate("/dashboard")}
+            <button onClick={() => navigate(backPath)}
               className="px-6 py-3 bg-white/10 text-white rounded-xl text-sm font-semibold hover:bg-white/20 transition-colors border border-white/20">
               ← Xem các ngành khác
             </button>
-            {!surveyCompleted && (
-              <button onClick={() => navigate("/survey")}
+            {fromDashboard && isInterim && (
+              <button onClick={() => navigate("/survey", { state: { resume: true } })}
                 className="px-6 py-3 bg-gradient-to-r from-amber-400 to-orange-400 text-white rounded-xl text-sm font-bold hover:opacity-90 transition-opacity shadow-lg">
                 Làm tiếp bài test ✨
               </button>
