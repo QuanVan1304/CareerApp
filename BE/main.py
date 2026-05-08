@@ -22,7 +22,11 @@ print("Đang khởi động hệ thống phân tích nghề nghiệp...")
 # --- CẤU HÌNH TẢI MÔ HÌNH TỪ GOOGLE DRIVE ---
 # Bạn dán ID của file Google Drive vào giữa 2 dấu ngoặc kép bên dưới
 # FILE_ID = "1pIXlcqsNGWj118sT10hshvhE3c0GWp4y" 
-MODEL_PATH = "career_model.pkl"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Tự động ghép nối đường dẫn tới file mô hình và metadata
+MODEL_PATH = os.path.join(BASE_DIR, "career_model.pkl")
+META_PATH = os.path.join(BASE_DIR, "model_metadata.json")
 
 # Hệ thống tự động kiểm tra xem máy chủ đã tải file này về chưa
 # if not os.path.exists(MODEL_PATH):
