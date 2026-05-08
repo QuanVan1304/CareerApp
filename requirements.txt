@@ -6,4 +6,3 @@ scikit-learn==1.5.2
 pydantic==2.9.2
 python-multipart==0.0.12
 gdown
-pip install gdown
