@@ -25,15 +25,15 @@ FILE_ID = "1pIXlcqsNGWj118sT10hshvhE3c0GWp4y"
 MODEL_PATH = "career_model.pkl"
 
 # Hệ thống tự động kiểm tra xem máy chủ đã tải file này về chưa
-if not os.path.exists(MODEL_PATH):
-    print(f"Đang tải mô hình {MODEL_PATH} từ Google Drive. Vui lòng đợi...")
-    try:
-        url = f'https://drive.google.com/uc?id={FILE_ID}'
-        # Hàm download sẽ tự động lưu file vào MODEL_PATH
-        gdown.download(url, MODEL_PATH, quiet=False)
-        print("Đã tải mô hình thành công!")
-    except Exception as e:
-        print(f"⚠️ LỖI khi tải file từ Google Drive: {e}")
+# if not os.path.exists(MODEL_PATH):
+#     print(f"Đang tải mô hình {MODEL_PATH} từ Google Drive. Vui lòng đợi...")
+#     try:
+#         url = f'https://drive.google.com/uc?id={FILE_ID}'
+#         # Hàm download sẽ tự động lưu file vào MODEL_PATH
+#         gdown.download(url, MODEL_PATH, quiet=False)
+#         print("Đã tải mô hình thành công!")
+#     except Exception as e:
+#         print(f"⚠️ LỖI khi tải file từ Google Drive: {e}")
 
 # --- Load Model và Metadata ---
 try:
